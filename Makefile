@@ -1,4 +1,4 @@
-.PHONY: uv-setup uv-uninstall clean setup deps dev check format
+.PHONY: uv-setup uv-uninstall clean setup deps dev check format test
 
 uv-setup:
 	@curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -37,3 +37,6 @@ check:
 
 format:
 	uv run ruff format .
+
+test:
+	uv run pytest --cov
