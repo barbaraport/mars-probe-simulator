@@ -1,0 +1,15 @@
+[project]
+name = "mars-probe-simulator"
+version = "0.1.0"
+description = "Mars probe simulator, a lightweight navigation engine for Mars probes built with Python."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.136.3",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "ruff>=0.15.14",
+]
