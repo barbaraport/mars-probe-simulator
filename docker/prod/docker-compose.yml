@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/prod/Dockerfile
+    restart: always
+
+  db:
+    restart: always

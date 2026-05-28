@@ -1,4 +1,6 @@
-.PHONY: uv-setup uv-uninstall clean setup deps dev check format test
+.PHONY: uv-setup uv-uninstall clean setup deps dev check format test prod
+
+COMPOSE= docker-compose --env-file ./.env -f docker/docker-compose.yml
 
 uv-setup:
 	@curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -27,9 +29,6 @@ deps:
 	@uv sync
 	@npm ci
 
-dev:
-	uv run fastapi dev app/main.py
-
 check:
 	uv run ruff check .
 	uv run ruff format --check .
@@ -38,5 +37,11 @@ check:
 format:
 	uv run ruff format .
 
+dev:
+	$(COMPOSE) -f docker/dev/docker-compose.yml up --build
+
+prod:
+	$(COMPOSE) -f docker/prod/docker-compose.yml up --build
+
 test:
-	uv run pytest --cov
+	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm app uv run pytest --cov
