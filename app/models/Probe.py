@@ -15,7 +15,6 @@ class Probe(Base):
     y = Column(Integer, nullable=False)
     direction = Column(Enum(Direction, name="direction"), nullable=False)
 
-    grid_id = Column(UUID(as_uuid=True), ForeignKey("grid.id"), default=uuid.uuid4)
     grid = relationship("Grid", back_populates="probe", uselist=False)
 
     __table_args__ = (

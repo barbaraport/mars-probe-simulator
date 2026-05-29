@@ -44,7 +44,8 @@ prod:
 	$(COMPOSE) -f docker/prod/docker-compose.yml up --build
 
 test:
-	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm app uv run pytest --cov
+	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run pytest --cov
 
 migration:
-	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm app uv run alembic revision --autogenerate -m "$(name)"
+	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
+	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head

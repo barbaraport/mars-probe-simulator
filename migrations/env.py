@@ -9,6 +9,18 @@ from alembic import context
 from app.models.Base import Base
 from app.core.config import settings
 
+# Automatically imports models ------------------------------------- #
+
+import pkgutil
+import importlib
+
+import app.models
+
+for _, module_name, _ in pkgutil.iter_modules(app.models.__path__):
+    importlib.import_module(f"app.models.{module_name}")
+
+# ------------------------------------------------------------------ #
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -85,7 +97,6 @@ async def run_migrations_online() -> None:
         await connection.run_sync(do_run_migrations)
 
     await connectable.dispose()
-
 
 
 if context.is_offline_mode():

@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: SecretStr
     DB_NAME: str
     APP_PORT: int
+    ADMINER_PORT: int
 
     @computed_field(repr=False)
     def DATABASE_URL(self) -> str:

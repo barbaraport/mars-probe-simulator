@@ -12,7 +12,7 @@ class Grid(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     x = Column(Integer, nullable=False)
     y = Column(Integer, nullable=False)
-    probe_id=Column(UUID(as_uuid=True), ForeignKey("probe.id"), default=uuid.uuid4)
+    probe_id = Column(UUID(as_uuid=True), ForeignKey("probe.id"), unique=True, nullable=False)
     probe = relationship("Probe", back_populates="grid")
 
     __table_args__ = (
