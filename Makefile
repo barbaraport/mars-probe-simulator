@@ -1,4 +1,4 @@
-.PHONY: uv-setup uv-uninstall clean setup deps dev check format test prod
+.PHONY: uv-setup uv-uninstall clean setup deps dev check format test prod migration
 
 COMPOSE= docker-compose --env-file ./.env -f docker/docker-compose.yml
 
@@ -45,3 +45,6 @@ prod:
 
 test:
 	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm app uv run pytest --cov
+
+migration:
+	$(COMPOSE) -f docker/dev/docker-compose.yml run --rm app uv run alembic revision --autogenerate -m "$(name)"
