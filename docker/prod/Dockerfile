@@ -9,4 +9,4 @@ RUN uv sync --frozen --no-dev
 
 COPY . .
 
-CMD ["uv", "run", "fastapi", "run", "app/main.py"]
+CMD ["uv", "run", "fastapi", "run", "app/main.py", "--host", "0.0.0.0"]
