@@ -1,7 +1,7 @@
-import enum
+from enum import Enum
 
 
-class Direction(enum.Enum):
+class Direction(str, Enum):
     NORTH = "NORTH"
     SOUTH = "SOUTH"
     EAST = "EAST"

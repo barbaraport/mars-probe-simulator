@@ -1,7 +1,7 @@
 from app.domain.probe.commands.command import Command
-from app.domain.probe.entities.direction import Direction
 from app.domain.probe.entities.grid import Grid
 from app.domain.probe.entities.probe import Probe
+from app.schemas.direction import Direction
 
 
 class TurnLeft(Command):

@@ -1,4 +1,4 @@
-from app.domain.probe.entities.direction import Direction
+from app.schemas.direction import Direction
 
 
 class Probe:

@@ -4,13 +4,12 @@ from pydantic import BaseModel, Field
 from app.schemas.direction import Direction
 
 
-class SetupRequest(BaseModel):
-    x: int = Field(..., gt=0)
-    y: int = Field(..., gt=0)
-    direction: Direction
+class MoveRequest(BaseModel):
+    id: UUID
+    command: str = Field(...)
 
 
-class SetupResponse(BaseModel):
+class MoveResponse(BaseModel):
     id: UUID
     x: int
     y: int

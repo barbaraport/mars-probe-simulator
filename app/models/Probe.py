@@ -1,21 +1,25 @@
 import uuid
 
-from sqlalchemy import UUID, CheckConstraint, Column, Enum, ForeignKey, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import UUID, CheckConstraint, Enum, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.Base import Base
-from app.models.Direction import Direction
+from app.schemas.direction import Direction
 
 
 class Probe(Base):
     __tablename__ = "probe"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    x = Column(Integer, nullable=False)
-    y = Column(Integer, nullable=False)
-    direction = Column(Enum(Direction, name="direction"), nullable=False)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    x: Mapped[int] = mapped_column(Integer, nullable=False)
+    y: Mapped[int] = mapped_column(Integer, nullable=False)
+    direction: Mapped[Direction] = mapped_column(
+        Enum(Direction, name="direction"), nullable=False
+    )
 
-    grid = relationship("Grid", back_populates="probe", uselist=False)
+    grid: Mapped["Grid"] = relationship("Grid", back_populates="probe", uselist=False)
 
     __table_args__ = (
         CheckConstraint("x >= 0", name="check_valid_grid_x_position"),

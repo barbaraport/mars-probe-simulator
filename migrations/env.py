@@ -83,6 +83,7 @@ async def run_migrations_online() -> None:
     )
 
     async with connectable.connect() as connection:
+
         def do_run_migrations(connection):
             context.configure(
                 connection=connection,

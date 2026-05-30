@@ -9,8 +9,12 @@ class SetupService:
     ) -> None:
         self.repository = repository
 
-    def process(
+    async def process(
         self,
         setup: SetupRequest,
     ) -> SetupResponse:
-        return self.repository.setup(setup)
+        probe = await self.repository.setup(setup)
+
+        return SetupResponse(
+            id=probe.id, x=probe.x, y=probe.y, direction=probe.direction
+        )
