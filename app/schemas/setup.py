@@ -1,7 +1,7 @@
-from uuid import UUID
 from pydantic import BaseModel, Field
 
 from app.schemas.direction import Direction
+from app.schemas.probe import ProbeResponse
 
 
 class SetupRequest(BaseModel):
@@ -10,8 +10,5 @@ class SetupRequest(BaseModel):
     direction: Direction
 
 
-class SetupResponse(BaseModel):
-    id: UUID
-    x: int
-    y: int
-    direction: Direction
+class SetupResponse(ProbeResponse):
+    pass

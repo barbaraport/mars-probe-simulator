@@ -1,3 +1,4 @@
+from typing import Sequence
 from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -42,3 +43,7 @@ class ProbeRepository:
         result = await self.session.execute(statement)
 
         return result.scalar_one_or_none()
+
+    async def find_all(self) -> Sequence[Probe]:
+        users = await self.session.scalars(select(Probe))
+        return users.all()
