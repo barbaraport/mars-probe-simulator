@@ -26,7 +26,7 @@ class Grid(Base):
     probe_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("probe.id"), unique=True, nullable=False
     )
-    probe: Mapped["Probe"] = relationship("Probe", back_populates="grid")
+    probe: Mapped["Probe"] = relationship("Probe", back_populates="grid")  # type: ignore  # noqa: F821
 
     __table_args__ = (
         CheckConstraint("x >= 0", name="check_valid_grid_x_position"),

@@ -32,3 +32,13 @@ source = ["app"]
 
 [tool.coverage.report]
 omit = ["tests/*"]
+
+[tool.ruff]
+exclude = [
+    "migrations",
+]
+
+[tool.mypy]
+exclude = [
+    "^migrations/",
+]

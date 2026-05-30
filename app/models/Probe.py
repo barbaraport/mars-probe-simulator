@@ -19,7 +19,7 @@ class Probe(Base):
         Enum(Direction, name="direction"), nullable=False
     )
 
-    grid: Mapped["Grid"] = relationship("Grid", back_populates="probe", uselist=False)
+    grid: Mapped["Grid"] = relationship("Grid", back_populates="probe", uselist=False)  # type: ignore  # noqa: F821
 
     __table_args__ = (
         CheckConstraint("x >= 0", name="check_valid_grid_x_position"),
