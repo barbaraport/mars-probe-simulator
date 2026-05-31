@@ -6,5 +6,5 @@ from app.domain.probe.entities.grid import Grid
 
 class Command(ABC):
     @abstractmethod
-    def execute(self, probe: Probe, grid: Grid):
+    def execute(self, probe: Probe, grid: Grid) -> Probe:
         pass

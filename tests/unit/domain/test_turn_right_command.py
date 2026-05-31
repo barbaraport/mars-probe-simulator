@@ -21,8 +21,8 @@ def test_when_turning_probe_to_the_right_then_should_turn_successfully_and_keep_
     probe = Probe(x=5, y=5, direction=old_direction)
     grid = Grid(x_size=5, y_size=5)
 
-    TurnRight().execute(probe, grid)
+    new_probe = TurnRight().execute(probe, grid)
 
-    assert probe.direction == new_direction
-    assert probe.x == 5
-    assert probe.y == 5
+    assert new_probe.direction == new_direction
+    assert new_probe.x == 5
+    assert new_probe.y == 5

@@ -7,9 +7,11 @@ class CommandRunner:
     def __init__(self, grid: Grid):
         self.grid = grid
 
-    def run(self, probe: Probe, commands: str):
+    def run(self, probe: Probe, commands: str) -> Probe:
+        new_probe = Probe(x=probe.x, y=probe.y, direction=probe.direction)
+
         for command_str in commands:
             command = CommandFactory.create(command_str)
-            command.execute(probe, self.grid)
+            new_probe = command.execute(new_probe, self.grid)
 
-        return probe
+        return new_probe

@@ -5,7 +5,7 @@ from app.schemas.direction import Direction
 
 
 class TurnRight(Command):
-    def execute(self, probe: Probe, grid: Grid):
+    def execute(self, probe: Probe, grid: Grid) -> Probe:
         directions = {
             Direction.NORTH: Direction.EAST,
             Direction.SOUTH: Direction.WEST,
@@ -14,4 +14,6 @@ class TurnRight(Command):
         }
 
         new_direction = directions[probe.direction]
-        probe.direction = new_direction
+        new_probe = Probe(x=probe.x, y=probe.y, direction=new_direction)
+
+        return new_probe

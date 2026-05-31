@@ -6,7 +6,7 @@ from app.schemas.direction import Direction
 
 
 class Move(Command):
-    def execute(self, probe: Probe, grid: Grid):
+    def execute(self, probe: Probe, grid: Grid) -> Probe:
         movements = {
             Direction.NORTH: (0, 1),  # NORTH -> y -> +1
             Direction.SOUTH: (0, -1),  # SOUTH -> y -> -1
@@ -24,5 +24,6 @@ class Move(Command):
                 f"Movement outside grid limits. The probe must not exceed the grid size of ({grid.x_size}, {grid.y_size})."
             )
 
-        probe.x = new_x_position
-        probe.y = new_y_position
+        new_probe = Probe(x=new_x_position, y=new_y_position, direction=probe.direction)
+
+        return new_probe
