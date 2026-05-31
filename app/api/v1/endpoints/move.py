@@ -6,6 +6,6 @@ from app.schemas.move import MoveRequest, MoveResponse
 move_router = APIRouter()
 
 
-@move_router.post("", response_model=MoveResponse)
+@move_router.patch("", response_model=MoveResponse)
 async def move_probe(move: MoveRequest, service: MoveServiceDependency):
     return await service.process(move)

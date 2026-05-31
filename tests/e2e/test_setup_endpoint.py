@@ -1,15 +1,16 @@
-from fastapi.testclient import TestClient
-from app.main import app
 from app.schemas.setup import Direction, SetupRequest
 from tests.utils import is_valid_uuid
+from httpx import AsyncClient
+import pytest
 
-client = TestClient(app)
 
-
-def test_example_response():
+@pytest.mark.asyncio
+async def test_when_creating_valid_setup_then_response_should_be_200(
+    client: AsyncClient,
+):
     payload = SetupRequest(x=5, y=5, direction=Direction.NORTH)
 
-    response = client.post("/api/v1/setup", json=payload.model_dump())
+    response = await client.post("/api/v1/setup", json=payload.model_dump(mode="json"))
 
     assert response.status_code == 200
 
