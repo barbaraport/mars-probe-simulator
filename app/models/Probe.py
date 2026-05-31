@@ -22,6 +22,6 @@ class Probe(Base):
     grid: Mapped["Grid"] = relationship("Grid", back_populates="probe", uselist=False)  # type: ignore  # noqa: F821
 
     __table_args__ = (
-        CheckConstraint("x >= 0", name="check_valid_grid_x_position"),
-        CheckConstraint("y >= 0", name="check_valid_grid_y_position"),
+        CheckConstraint("x >= 0", name="check_valid_probe_x_position"),
+        CheckConstraint("y >= 0", name="check_valid_probe_y_position"),
     )
