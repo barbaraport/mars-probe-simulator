@@ -4,3 +4,7 @@ class InvalidCommandError(Exception):
 
 class InvalidMovementError(Exception):
     pass
+
+
+class InvalidSizeError(Exception):
+    pass
