@@ -14,9 +14,11 @@ class CommandFactory:
             "R": TurnRight(),
         }
 
-        if command not in commands:
+        command_uppercase = command.upper()
+
+        if command_uppercase not in commands:
             raise InvalidCommandError(
-                f"The command '{command}' does not exist. The existent commands are: {', '.join(commands.keys())}"
+                f"The command '{command}' does not exist. The existent commands are: {', '.join(commands.keys())}."
             )
 
-        return commands[command]
+        return commands[command_uppercase]
