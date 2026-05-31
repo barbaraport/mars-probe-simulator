@@ -8,3 +8,7 @@ class InvalidMovementError(Exception):
 
 class InvalidSizeError(Exception):
     pass
+
+
+class InvalidCoordinateError(Exception):
+    pass
