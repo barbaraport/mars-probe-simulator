@@ -8,6 +8,7 @@ from app.models.Probe import Probe
 from app.schemas.direction import Direction
 from app.schemas.setup import SetupRequest
 from app.services.setup_service import SetupService
+from fastapi import HTTPException
 
 
 @pytest.mark.asyncio
@@ -35,3 +36,22 @@ async def test_when_creating_valid_probe_and_grid_then_should_have_success():
     assert created_probe.x == 0
     assert created_probe.y == 0
     assert created_probe.direction == Direction.EAST
+
+
+@pytest.mark.asyncio
+async def test_when_repository_raises_then_service_raises_unexpected_error():
+    repo = AsyncMock()
+    repo.setup.side_effect = Exception("unexpected failure")
+
+    service = SetupService(repo)
+
+    with pytest.raises(HTTPException) as exc_info:
+        await service.setup(SetupRequest(x=20, y=20, direction=Direction.EAST))
+
+    repo.setup.assert_called_once()
+
+    assert exc_info.value.status_code == 500
+    assert exc_info.value.detail == {
+        "code": "SETUP_UNEXPECTED_ERROR",
+        "message": "Unexpected error. Try again in a few seconds.",
+    }

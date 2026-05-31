@@ -73,7 +73,7 @@ move_router = APIRouter()
                 "application/json": {
                     "example": {
                         "detail": {
-                            "code": "UNEXPECTED_ERROR",
+                            "code": "MOVE_UNEXPECTED_ERROR",
                             "message": "Unexpected error. Try again. For security, no commands were delivered to the probe.",
                         }
                     }

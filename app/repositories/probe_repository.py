@@ -6,7 +6,6 @@ from sqlalchemy.orm import selectinload
 
 from app.models.Grid import Grid
 from app.models.Probe import Probe
-from app.schemas.setup import SetupRequest
 
 
 class ProbeRepository:
@@ -15,7 +14,7 @@ class ProbeRepository:
 
     async def setup(
         self,
-        position: SetupRequest,
+        position: Probe,
     ) -> Probe:
         probe = Probe(x=0, y=0, direction=position.direction)
         grid = Grid(x=position.x, y=position.y)

@@ -75,7 +75,7 @@ class MoveService:
             raise HTTPException(
                 status_code=500,
                 detail={
-                    "code": "UNEXPECTED_ERROR",
+                    "code": "MOVE_UNEXPECTED_ERROR",
                     "message": "Unexpected error. Try again. For security, no commands were delivered to the probe.",
                 },
             )

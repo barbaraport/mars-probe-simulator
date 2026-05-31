@@ -20,6 +20,25 @@ setup_router = APIRouter()
         "This endpoint delegates creation to the service layer and returns the created probe state as a SetupResponse. "
         "Under the hood, the SetupService uses ProbeRepository to persist the probe and its grid position."
     ),
+    responses={
+        200: {
+            "description": "Probe initialized successfully on valid grid",
+            "model": SetupResponse,
+        },
+        500: {
+            "description": "Unexpected server error.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": {
+                            "code": "SETUP_UNEXPECTED_ERROR",
+                            "message": "Unexpected error. Try again in a few seconds.",
+                        }
+                    }
+                }
+            },
+        },
+    },
 )
 async def setup_probe(setup: SetupRequest, service: SetupServiceDependency):
     """

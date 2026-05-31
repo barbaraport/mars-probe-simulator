@@ -15,6 +15,25 @@ check_router = APIRouter()
         "This endpoint uses the service layer to load probe entities from the repository, "
         "transform them into response models, and return their current position and direction."
     ),
+    responses={
+        200: {
+            "description": "Probes fetched successfully",
+            "model": CheckResponse,
+        },
+        500: {
+            "description": "Unexpected server error.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": {
+                            "code": "CHECK_UNEXPECTED_ERROR",
+                            "message": "Unexpected error. Try again in a few seconds.",
+                        }
+                    }
+                }
+            },
+        },
+    },
 )
 async def check_probes(service: CheckServiceDependency):
     """
