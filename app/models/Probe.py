@@ -19,7 +19,7 @@ class Probe(Base):
         Enum(Direction, name="direction"), nullable=False
     )
 
-    grid: Mapped["Grid"] = relationship(  # noqa: F821 # type: ignore
+    grid: Mapped["Grid"] = relationship(  # type: ignore  # noqa: F821
         "Grid", back_populates="probe", uselist=False, lazy="selectin"
     )
 
