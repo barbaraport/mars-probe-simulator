@@ -7,7 +7,7 @@ from app.models.Grid import Grid
 from app.models.Probe import Probe
 from app.schemas.direction import Direction
 from app.schemas.setup import SetupRequest
-from app.services.setup import SetupService
+from app.services.setup_service import SetupService
 
 
 @pytest.mark.asyncio
@@ -26,7 +26,7 @@ async def test_when_creating_valid_probe_and_grid_then_should_have_success():
 
     service = SetupService(repo)
 
-    created_probe = await service.process(
+    created_probe = await service.setup(
         SetupRequest(x=20, y=20, direction=Direction.EAST)
     )
 

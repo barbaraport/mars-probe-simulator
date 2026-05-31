@@ -3,12 +3,12 @@ from typing import Annotated
 from fastapi import Depends
 
 from app.core.database import get_session
-from app.repositories.probe import ProbeRepository
-from app.services.check import CheckService
-from app.services.move import MoveService
+from app.repositories.probe_repository import ProbeRepository
+from app.services.check_service import CheckService
+from app.services.move_service import MoveService
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.services.setup import SetupService
+from app.services.setup_service import SetupService
 
 
 AsyncSessionDependency = Annotated[AsyncSession, Depends(get_session)]

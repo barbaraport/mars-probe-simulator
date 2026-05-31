@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from .endpoints.setup import setup_router
-from .endpoints.move import move_router
-from .endpoints.check import check_router
+from .endpoints.setup_router import setup_router
+from .endpoints.move_router import move_router
+from .endpoints.check_router import check_router
 
 
 api_router = APIRouter()

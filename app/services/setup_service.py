@@ -1,5 +1,5 @@
 from app.schemas.setup import SetupRequest, SetupResponse
-from app.repositories.probe import ProbeRepository
+from app.repositories.probe_repository import ProbeRepository
 
 
 class SetupService:
@@ -9,7 +9,7 @@ class SetupService:
     ) -> None:
         self.repository = repository
 
-    async def process(
+    async def setup(
         self,
         setup: SetupRequest,
     ) -> SetupResponse:

@@ -5,7 +5,7 @@ import pytest
 
 from app.models.Probe import Probe
 from app.schemas.direction import Direction
-from app.services.check import CheckService
+from app.services.check_service import CheckService
 
 
 @pytest.mark.asyncio

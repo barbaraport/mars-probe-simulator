@@ -1,5 +1,5 @@
 from app.schemas.check import CheckResponse
-from app.repositories.probe import ProbeRepository
+from app.repositories.probe_repository import ProbeRepository
 from app.schemas.probe import ProbeResponse
 
 

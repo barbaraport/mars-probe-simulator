@@ -3,7 +3,7 @@ from app.domain.probe.entities.grid import Grid
 from app.domain.probe.exceptions import InvalidCommandError, InvalidMovementError
 from app.domain.services.CommandRunner import CommandRunner
 from app.models.Probe import Probe as ModelProbe
-from app.repositories.probe import ProbeRepository
+from app.repositories.probe_repository import ProbeRepository
 from app.schemas.move import MoveResponse, MoveRequest
 from fastapi import HTTPException
 
@@ -15,7 +15,7 @@ class MoveService:
     ) -> None:
         self.repository = repository
 
-    async def process(
+    async def move(
         self,
         move: MoveRequest,
     ) -> MoveResponse:

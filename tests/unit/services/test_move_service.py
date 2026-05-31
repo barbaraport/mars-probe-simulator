@@ -6,7 +6,7 @@ import pytest
 from app.models.Probe import Probe
 from app.schemas.direction import Direction
 from app.schemas.move import MoveRequest
-from app.services.move import MoveService
+from app.services.move_service import MoveService
 from fastapi import HTTPException
 
 
@@ -22,7 +22,7 @@ async def when_moving_existent_probe_then_should_have_success():
 
     service = MoveService(repo)
 
-    moved_probe = await service.process(MoveRequest(id=probe_id, command="MMM"))
+    moved_probe = await service.move(MoveRequest(id=probe_id, command="MMM"))
 
     repo.create.assert_called_once()
     assert moved_probe.id == probe_id
@@ -41,7 +41,7 @@ async def test_when_moving_nonexistent_probe_then_should_raise_404_error():
     service = MoveService(repo)
 
     with pytest.raises(HTTPException) as exc_info:
-        await service.process(MoveRequest(id=probe_id, command="MMM"))
+        await service.move(MoveRequest(id=probe_id, command="MMM"))
 
     repo.find_by_id.assert_called_once()
     assert exc_info.value.status_code == 404
