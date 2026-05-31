@@ -1,6 +1,7 @@
-.PHONY: uv-setup uv-uninstall clean setup deps dev check format test prod migration
+.PHONY: uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade
 
-COMPOSE= docker-compose --env-file ./.env -f docker/docker-compose.yml
+COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
+TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
 
 uv-setup:
 	@curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -20,6 +21,7 @@ clean:
 	@rm -rf .venv
 	@rm -f .coverage
 	@rm -rf .pytest_cache
+	@$(COMPOSE) -f docker/dev/docker-compose.yml down --remove-orphans -v
 
 setup:
 	@${MAKE} uv-setup
@@ -49,8 +51,15 @@ prod:
 	@$(COMPOSE) -f docker/prod/docker-compose.yml up --build
 
 test:
-	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run pytest --cov
+	@$(TEST_COMPOSE) run --rm mars-probe-simulator-app uv run pytest --cov
+	@$(TEST_COMPOSE) down
+
+db-upgrade:
+	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+	@$(COMPOSE) -f docker/dev/docker-compose.yml down
 
 migration:
+	@${MAKE} db-upgrade
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
-	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+	@${MAKE} db-upgrade
+	@$(COMPOSE) -f docker/dev/docker-compose.yml down

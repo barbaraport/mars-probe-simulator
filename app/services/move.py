@@ -4,6 +4,7 @@ from app.domain.services.CommandRunner import CommandRunner
 from app.models.Probe import Probe as ModelProbe
 from app.repositories.probe import ProbeRepository
 from app.schemas.move import MoveResponse, MoveRequest
+from fastapi import HTTPException
 
 
 class MoveService:
@@ -20,7 +21,13 @@ class MoveService:
         probe = await self.repository.find_by_id(move.id)
 
         if probe is None:
-            raise ValueError("implement a better error")
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "code": "PROBE_NOT_FOUND",
+                    "message": f"Probe {move.id} not found.",
+                },
+            )
 
         grid = probe.grid
 

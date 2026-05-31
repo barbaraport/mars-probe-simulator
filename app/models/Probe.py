@@ -19,7 +19,9 @@ class Probe(Base):
         Enum(Direction, name="direction"), nullable=False
     )
 
-    grid: Mapped["Grid"] = relationship("Grid", back_populates="probe", uselist=False)  # type: ignore  # noqa: F821
+    grid: Mapped["Grid"] = relationship(  # noqa: F821 # type: ignore
+        "Grid", back_populates="probe", uselist=False, lazy="selectin"
+    )
 
     __table_args__ = (
         CheckConstraint("x >= 0", name="check_valid_probe_x_position"),
