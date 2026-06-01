@@ -1,2 +1,5 @@
 [run]
 data_file = /tmp/.coverage
+
+[html]
+directory = /tmp/htmlcov
