@@ -1,6 +1,0 @@
-services:
-  mars-probe-simulator-app:
-    build:
-      context: ..
-      dockerfile: docker/ci/Dockerfile
-    volumes: []

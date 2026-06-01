@@ -2,7 +2,7 @@
 
 COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
 TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
-CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/ci/docker-compose.yml 
+CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
 
 help:
 	@printf "Available commands:\n"
@@ -78,5 +78,5 @@ migration:
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
 
 ci:
-	@$(CI_COMPOSE) run --rm mars-probe-simulator-app pytest --cov
+	@$(CI_COMPOSE) run --rm mars-probe-simulator-app uv run pytest --cov
 	@$(CI_COMPOSE) down
