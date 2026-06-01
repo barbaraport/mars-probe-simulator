@@ -5,6 +5,8 @@ from .endpoints.check_router import check_router
 
 
 api_router = APIRouter()
-api_router.include_router(setup_router, prefix="/setup", tags=["setup"])
-api_router.include_router(move_router, prefix="/move", tags=["move"])
-api_router.include_router(check_router, prefix="/check", tags=["check"])
+api_router.include_router(
+    setup_router, prefix="/setup", tags=["Setup probe and its grid"]
+)
+api_router.include_router(move_router, prefix="/move", tags=["Move probe"])
+api_router.include_router(check_router, prefix="/check", tags=["Check all probes"])

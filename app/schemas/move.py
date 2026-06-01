@@ -1,5 +1,5 @@
 from uuid import UUID
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.direction import Direction
 
@@ -9,7 +9,10 @@ class MoveRequest(BaseModel):
     command: str = Field(
         ...,
         description="Commands to run on the probe. Available commands: M (move forward, according to current probe's cardinal orientation), L (turn left), R (turn right). Note: in case of invalid commands or commands with invalid outcomes, no changes will be applied on the probe state.",
+        min_length=1,
     )
+
+    model_config = ConfigDict(str_strip_whitespace=True)
 
 
 class MoveResponse(BaseModel):

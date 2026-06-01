@@ -13,12 +13,16 @@ setup_router = APIRouter()
     summary="Initialize a Mars probe on the grid",
     response_description="Details of the newly created probe, including its generated id, coordinates, and direction.",
     description=(
-        "Create a new Mars probe on the grid using the SetupService. "
-        "The request body must include `x`, `y`, and `direction`. "
-        "The `x` and `y` values specify the size of the grid, while `direction` sets the probe's initial cardinal orientation. "
-        "The probe is placed at the origin coordinate `(0, 0)` within that grid. "
-        "This endpoint delegates creation to the service layer and returns the created probe state as a SetupResponse. "
-        "Under the hood, the SetupService uses ProbeRepository to persist the probe and its grid position."
+        "Create a new Mars probe on the grid using the SetupService.\n\n"
+        "### Request\n"
+        "- `x` and `y`: grid dimensions\n"
+        "- `direction`: initial cardinal orientation\n\n"
+        "### Behavior\n"
+        "- The probe starts at coordinate `(0, 0)` on the grid.\n"
+        "- Grid dimensions must be non-negative integers, and at least one dimension must be greater than zero.\n\n"
+        "### Result\n"
+        "- Returns the created probe state as a `SetupResponse`.\n"
+        "- The SetupService uses ProbeRepository to persist the probe and its grid position."
     ),
     responses={
         200: {

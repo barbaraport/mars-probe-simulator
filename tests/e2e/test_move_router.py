@@ -96,7 +96,7 @@ async def test_when_moving_beyond_grid_boundaries_then_response_should_be_422(
 
 
 @pytest.mark.asyncio
-async def test_when_moving_with_empty_command_then_response_should_be_200_and_state_unchanged(
+async def test_when_moving_with_empty_command_then_should_reject_empty_command_and_raise_422(
     client: AsyncClient,
 ):
     create_payload = SetupRequest(x=2, y=2, direction=Direction.NORTH)
@@ -105,14 +105,12 @@ async def test_when_moving_with_empty_command_then_response_should_be_200_and_st
     )
 
     probe_id = create_response.json()["id"]
-    move_payload = MoveRequest(id=probe_id, command="")
     move_response = await client.patch(
-        "/api/v1/move", json=move_payload.model_dump(mode="json")
+        "/api/v1/move", json={"id": probe_id, "command": "   "}
     )
     data = move_response.json()
 
-    assert move_response.status_code == 200
-    assert data["id"] == probe_id
-    assert data["x"] == 0
-    assert data["y"] == 0
-    assert data["direction"] == "NORTH"
+    assert move_response.status_code == 422
+    assert data["detail"][0]["loc"] == ["body", "command"]
+    assert data["detail"][0]["type"] == "string_too_short"
+    assert data["detail"][0]["msg"] == "String should have at least 1 character"
