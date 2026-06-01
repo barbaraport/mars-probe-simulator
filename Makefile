@@ -78,5 +78,5 @@ migration:
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
 
 ci:
-	@$(CI_COMPOSE) run --rm mars-probe-simulator-app python -m pytest --cov
+	@$(CI_COMPOSE) run --rm mars-probe-simulator-app .venv/bin/pytest --cov
 	@$(CI_COMPOSE) down
