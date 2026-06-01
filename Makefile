@@ -2,7 +2,7 @@
 
 COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
 LOCAL_TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
-CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/ci/docker-compose.yml 
+CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
 
 RUN_PYTEST=uv run pytest --cov=app
 
@@ -80,7 +80,10 @@ migration:
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
 
 ci:
-	@$(CI_COMPOSE) run --rm mars-probe-simulator-app sh -c "\
+	@$(CI_COMPOSE) run --name ci-tests mars-probe-simulator-app sh -c "\
 		COVERAGE_FILE=/tmp/coverage/.coverage \
 		$(RUN_PYTEST) --cov-report=html:/tmp/htmlcov"
+	@docker cp ci-tests:/tmp/coverage ./coverage
+	@docker cp ci-tests:/tmp/htmlcov ./htmlcov
+	@docker rm -f ci-tests || true
 	@$(CI_COMPOSE) down

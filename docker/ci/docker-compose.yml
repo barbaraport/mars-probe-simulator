@@ -1,9 +1,0 @@
-services:
-  mars-probe-simulator-app:
-    build:
-      context: ..
-      dockerfile: docker/ci/Dockerfile
-    volumes:
-      - ..:/app
-      - ./coverage:/tmp/coverage
-      - ./htmlcov:/tmp/htmlcov
