@@ -26,7 +26,5 @@ jobs:
               with:
                   python-version: "3.12"
 
-            - uses: astral-sh/setup-uv@v5
-
             - run: make setup
             - run: make test
