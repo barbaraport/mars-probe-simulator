@@ -5,7 +5,6 @@ WORKDIR /app
 RUN pip install --no-cache-dir uv && chown -R appuser:appuser /app
 USER appuser
 COPY --chown=appuser:appuser pyproject.toml uv.lock ./
-RUN mkdir -p /app/.venv && ls -ld /app/.venv
-RUN UV_LOG_CONTEXT=1 uv sync --frozen --dev -vv
+RUN uv sync --frozen --dev --no-install-project
 COPY --chown=appuser:appuser . .
 CMD ["uv", "run", "fastapi", "dev", "app/main.py", "--host", "0.0.0.0"]
