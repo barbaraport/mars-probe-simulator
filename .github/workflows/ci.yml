@@ -37,9 +37,15 @@ jobs:
           EOF
       - name: Run CI checks
         run: make ci
+      - name: Upload coverage artifact (backup)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: /tmp/htmlcov
+
       - name: Deploy coverage report
+        if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: htmlcov
-        if: github.ref == 'refs/heads/main'
+          publish_dir: /tmp/htmlcov
