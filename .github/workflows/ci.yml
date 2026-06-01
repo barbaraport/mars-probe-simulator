@@ -42,8 +42,23 @@ jobs:
           EOF
       - name: Run CI checks
         run: make ci
-      - name: Upload coverage artifact (backup)
+      - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-html
           path: htmlcov
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-html
+          path: htmlcov
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: htmlcov
