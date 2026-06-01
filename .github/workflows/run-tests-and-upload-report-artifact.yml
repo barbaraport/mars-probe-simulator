@@ -1,14 +1,9 @@
-name: CI
+name: Run tests and upload report artifact
 
 on:
   pull_request:
   push:
     branches: [main]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 
 jobs:
   test:
@@ -46,11 +41,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-html
-          path: htmlcov
-
-      - name: Deploy coverage report
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: htmlcov
+          path: /tmp/htmlcov

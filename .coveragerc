@@ -2,4 +2,4 @@
 data_file = /tmp/.coverage
 
 [html]
-directory = htmlcov
+directory = /tmp/htmlcov
