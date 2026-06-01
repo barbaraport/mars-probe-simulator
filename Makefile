@@ -1,7 +1,8 @@
 .PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade
 
-COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
-TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
+DOCKER_COMPOSE ?= docker compose
+COMPOSE=$(DOCKER_COMPOSE) --env-file ./.env -f docker/docker-compose.yml
+TEST_COMPOSE=$(DOCKER_COMPOSE) --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
 
 help:
 	@printf "Available commands:\n"
