@@ -80,5 +80,8 @@ migration:
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
 
 ci:
-	@$(CI_COMPOSE) run --rm mars-probe-simulator-app COVERAGE_FILE=/tmp/coverage/.coverage $(RUN_PYTEST) --cov-report=html:/tmp/htmlcov
+	@$(CI_COMPOSE) run --rm mars-probe-simulator-app sh -c "\
+		mkdir -p /tmp/coverage /tmp/htmlcov && \
+		COVERAGE_FILE=/tmp/coverage/.coverage \
+		$(RUN_PYTEST) --cov-report=html:/tmp/htmlcov"
 	@$(CI_COMPOSE) down

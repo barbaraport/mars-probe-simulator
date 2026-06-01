@@ -36,9 +36,7 @@ jobs:
           ENV=${{ vars.ENV }}
           EOF
       - name: Run CI checks
-        run: |
-          mkdir -p /tmp/coverage /tmp/htmlcov
-          make ci
+        run: make ci
       - name: Upload coverage artifact (backup)
         uses: actions/upload-artifact@v4
         with:
