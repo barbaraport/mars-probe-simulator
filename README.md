@@ -32,7 +32,7 @@ This repository is intentionally organized to show:
 - **pytest** – deterministic, fast automated testing
 - **ruff** – linting, formatting, and static checks
 
-## 🐳 Docker & Deployment Ready
+### 🐳 Docker & Deployment Ready
 
 This repository includes Docker Compose configuration for both development and test workflows.
 
@@ -42,7 +42,7 @@ This repository includes Docker Compose configuration for both development and t
 
 `make dev` launches the local stack, while `make test` executes the suite in a reproducible test environment.
 
-## 🧰 Code Quality and Developer Experience
+### 🧰 Code Quality and Developer Experience
 
 This repo includes quality controls that reflect engineering discipline:
 
@@ -52,7 +52,7 @@ This repo includes quality controls that reflect engineering discipline:
 - environment-specific runtime configuration
 - modular and testable dependency wiring
 
-### 📦 Database Access (Adminer)
+#### 📦 Database Access (Adminer)
 
 Adminer is included as a lightweight tool for inspecting the database during local development.
 
@@ -65,9 +65,7 @@ It enables:
 
 This accelerates development without requiring an external database client.
 
-[![Adminer home](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-1.png)
-
-[![Mars probe simulator tables on Adminer](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-2.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-2.png)
+[![Mars probe simulator tables on Adminer](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-1.png)
 
 ### ⛳ Local commands
 
@@ -84,22 +82,24 @@ This accelerates development without requiring an external database client.
 
 This service uses a layered backend architecture to minimize coupling and reduce risk when shipping changes.
 
-```text
-             HTTP Layer
-        (FastAPI routes)
-               ↓
-          Service Layer
-   (business orchestration)
-               ↓
-          Domain Layer
-   (probe/grid rules)
-               ↓
-       Repository Layer
-          (data access)
-               ↓
-          Database
-        (PostgreSQL)
-```
+<div align="center">
+<pre>
+HTTP Layer
+(FastAPI routes)
+↓
+Service Layer
+(business orchestration)
+↓
+Domain Layer
+(probe/grid rules)
+↓
+Repository Layer
+(data access)
+↓
+Database
+(PostgreSQL)
+</pre>
+</div>
 
 Each layer is intentionally responsible for only one concern:
 
@@ -131,6 +131,8 @@ This layout is designed to support team development, safe refactoring, and incre
 
 This repository follows a disciplined test pyramid with clearly defined test boundaries.
 
+To run the test suite, use the provided make commands. `make setup` initializes the development environment and installs dependencies, while `make test` executes all tests across the pyramid. These commands streamline the setup and test execution process, ensuring consistency across the development team.
+
 ```bash
 make setup
 make test
@@ -154,6 +156,16 @@ Validate real HTTP behavior through FastAPI endpoints.
 - route contracts
 - request/response validation
 - business workflows
+
+```text
+tests/
+├── unit/                    # isolated business logic tests
+│   ├── services/            # service orchestration
+│   ├── domain/              # domain rules and entities
+├── integration/             # database persistence tests
+│   └── repositories/        # repository contracts and queries
+└── e2e/                     # HTTP endpoint tests, route contracts and workflows
+```
 
 > This approach yields confidence for both safe refactoring and production-quality delivery.
 
@@ -243,18 +255,23 @@ All endpoints are exposed under `/api/v1`.
   - returns the created probe state
 
 [![Probe/Grid setup router](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)
+[![Probe/Grid setup router response](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-2.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-2.png)
 
 - `PATCH /api/v1/move`
   - execute movement commands against an existing probe
   - valid commands: `L`, `R`, `M`
   - prevents invalid grid moves and invalid commands
 
-[![Grid movement router](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)
+[![Grid movement router](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-1.png)
+[![Probe/Grid move response](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-2.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-2.png)
+[![Probe/Grid move error for non existent command](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-3.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-3.png)
+[![Probe/Grid move error for command with invalid result](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-4.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/move-4.png)
 
 - `GET /api/v1/check`
   - returns current probe coordinates and orientation
 
 [![Available probes list](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/check-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/check-1.png)
+[![Available probes after fetching](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/check-2.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/check-2.png)
 
 > OpenAPI docs are available at `/docs` when the app is running.
 
