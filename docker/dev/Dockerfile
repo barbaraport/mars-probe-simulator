@@ -4,6 +4,7 @@ RUN groupadd --gid 1000 appuser \
 WORKDIR /app
 RUN pip install --no-cache-dir uv && chown -R appuser:appuser /app
 USER appuser
+ENV UV_PROJECT_ENVIRONMENT=/home/appuser/.venv
 COPY --chown=appuser:appuser pyproject.toml uv.lock ./
 RUN uv sync --frozen --dev --no-install-project
 COPY --chown=appuser:appuser . .
