@@ -1,8 +1,8 @@
-.PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade
+.PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade ci
 
-DOCKER_COMPOSE ?= docker compose
-COMPOSE=$(DOCKER_COMPOSE) --env-file ./.env -f docker/docker-compose.yml
-TEST_COMPOSE=$(DOCKER_COMPOSE) --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
+COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
+TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
+CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/ci/docker-compose.yml
 
 help:
 	@printf "Available commands:\n"
@@ -76,3 +76,7 @@ migration:
 	@${MAKE} db-upgrade
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+
+ci:
+	@$(CI_COMPOSE) run --rm mars-probe-simulator-app uv run pytest --cov
+	@$(CI_COMPOSE) down

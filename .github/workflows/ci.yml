@@ -37,9 +37,5 @@ jobs:
                   EOF
             - name: Install uv
               uses: astral-sh/setup-uv@v6
-            - name: Set up database
-              run: make db-upgrade
-            - name: Run tests
-              run: make test
-            - name: Run linting checks
-              run: make check
+            - name: Run CI checks
+              run: make ci
