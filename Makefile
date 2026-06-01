@@ -1,7 +1,10 @@
-.PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade
+.PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade ci
 
 COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
 TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
+CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
+
+RUN_PYTEST=uv run pytest --cov=app --cov-report=html
 
 help:
 	@printf "Available commands:\n"
@@ -63,7 +66,7 @@ prod:
 	@$(COMPOSE) -f docker/prod/docker-compose.yml up --build
 
 test:
-	@$(TEST_COMPOSE) run --rm mars-probe-simulator-app uv run pytest --cov
+	@$(TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST)
 	@$(TEST_COMPOSE) down
 
 db-upgrade:
@@ -75,3 +78,7 @@ migration:
 	@${MAKE} db-upgrade
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+
+ci:
+	@$(CI_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST)
+	@$(CI_COMPOSE) down

@@ -6,7 +6,7 @@ services:
     ports:
       - "${APP_PORT}:8000"
     volumes:
-      - .:/app
+      - ..:/app
     depends_on:
       - mars-probe-simulator-db
 
