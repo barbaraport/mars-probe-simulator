@@ -4,7 +4,7 @@ COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
 TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
 CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
 
-RUN_PYTEST=uv run pytest --cov=app --cov-report=html
+RUN_PYTEST=uv run pytest --cov=app
 
 help:
 	@printf "Available commands:\n"
@@ -66,7 +66,7 @@ prod:
 	@$(COMPOSE) -f docker/prod/docker-compose.yml up --build
 
 test:
-	@$(TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST)
+	@$(TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST) --cov-report=html
 	@$(TEST_COMPOSE) down
 
 db-upgrade:
@@ -80,5 +80,5 @@ migration:
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
 
 ci:
-	@$(CI_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST)
+	@$(CI_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST) --cov-report=html:htmlcov
 	@$(CI_COMPOSE) down
