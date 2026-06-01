@@ -1,0 +1,9 @@
+services:
+  mars-probe-simulator-app:
+    build:
+      context: ..
+      dockerfile: docker/prod/Dockerfile
+    restart: always
+
+  mars-probe-simulator-db:
+    restart: always

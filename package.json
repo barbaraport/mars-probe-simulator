@@ -1,0 +1,26 @@
+{
+  "name": "mars-probe-simulator-commit-linting",
+  "version": "1.0.0",
+  "description": "Commit linting for mars-probe-simulator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barbaraport/mars-probe-simulator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/barbaraport/mars-probe-simulator/issues"
+  },
+  "homepage": "https://github.com/barbaraport/mars-probe-simulator#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "husky": "^9.1.7"
+  }
+}
