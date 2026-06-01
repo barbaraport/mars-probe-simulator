@@ -1,8 +1,8 @@
 .PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade ci
 
 COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
-TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
-CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
+LOCAL_TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
+CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/ci/docker-compose.yml 
 
 RUN_PYTEST=uv run pytest --cov=app
 
@@ -66,8 +66,8 @@ prod:
 	@$(COMPOSE) -f docker/prod/docker-compose.yml up --build
 
 test:
-	@$(TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST) --cov-report=html
-	@$(TEST_COMPOSE) down
+	@$(LOCAL_TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST) --cov-report=html
+	@$(LOCAL_TEST_COMPOSE) down
 
 db-upgrade:
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
