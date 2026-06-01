@@ -5,6 +5,8 @@
 .venv
 venv
 docker
+files
+htmlcov
 node_modules
 .coverage
 __pycache__
