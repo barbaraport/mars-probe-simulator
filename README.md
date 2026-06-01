@@ -159,13 +159,13 @@ Validate real HTTP behavior through FastAPI endpoints.
 
 ```text
 tests/
-├── unit/               # isolated business logic tests
+├── unit/                    # isolated business logic tests
 │   ├── test_services/       # service orchestration
 │   ├── test_domain/         # domain rules and entities
 │   └── test_validation/     # input validation and parsing
-├── integration/        # database persistence tests
+├── integration/             # database persistence tests
 │   └── test_repositories/   # repository contracts and queries
-└── e2e/               # HTTP endpoint tests
+└── e2e/                     # HTTP endpoint tests
     └── test_api/            # route contracts and workflows
 ```
 
