@@ -1,7 +1,18 @@
-.PHONY: uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade
+.PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade
 
 COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
 TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
+
+help:
+	@printf "Available commands:\n"
+	@printf "  make help        Show this help message\n"
+	@printf "  make setup       Install dependencies, enable git hooks, and migrate the DB\n"
+	@printf "  make dev         Start the local development environment\n"
+	@printf "  make test        Run the test suite in the test compose environment\n"
+	@printf "  make check       Run lint, format checks, and mypy\n"
+	@printf "  make db-upgrade  Apply Alembic migrations to the development DB\n"
+	@printf "  make migration   Create a new Alembic migration and apply upgrades\n"
+	@printf "  make clean       Remove build artifacts and stop Docker containers\n"
 
 uv-setup:
 	@curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -30,6 +41,7 @@ setup:
 	@echo "make check" > .husky/pre-commit
 	@chmod +x .husky/commit-msg
 	@chmod +x .husky/pre-commit
+	@${MAKE} db-upgrade
 
 deps:
 	@uv sync --quiet
