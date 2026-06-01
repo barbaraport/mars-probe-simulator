@@ -1,10 +1,10 @@
 .PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade ci
 
-COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
-TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
-CI_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
+BASE_COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
+CI_TEST_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
+LOCAL_TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
 
-RUN_PYTEST=uv run pytest --cov=app --cov-report=html
+RUN_PYTEST=uv run pytest --cov=app
 
 help:
 	@printf "Available commands:\n"
@@ -35,7 +35,7 @@ clean:
 	@rm -rf .venv
 	@rm -f .coverage
 	@rm -rf .pytest_cache
-	@$(COMPOSE) -f docker/dev/docker-compose.yml down --remove-orphans -v
+	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml down --remove-orphans -v
 
 setup:
 	@${MAKE} uv-setup
@@ -60,25 +60,30 @@ format:
 	@uv run ruff format .
 
 dev:
-	@$(COMPOSE) -f docker/dev/docker-compose.yml up --build
+	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml up --build
 
 prod:
-	@$(COMPOSE) -f docker/prod/docker-compose.yml up --build
+	@$(BASE_COMPOSE) -f docker/prod/docker-compose.yml up --build
 
 test:
-	@$(TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST)
-	@$(TEST_COMPOSE) down
+	@$(LOCAL_TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST) --cov-report=html
+	@$(LOCAL_TEST_COMPOSE) down
 
 db-upgrade:
-	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
-	@$(COMPOSE) -f docker/dev/docker-compose.yml down
+	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml down
 
 migration:
 	@if [ -z "$(name)" ]; then echo "Error: name parameter required. Usage: make migration name='description'"; exit 1; fi
 	@${MAKE} db-upgrade
-	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
-	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
+	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
 
 ci:
-	@$(CI_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST)
+	@$(CI_COMPOSE) run --name ci-tests mars-probe-simulator-app sh -c "\
+		COVERAGE_FILE=/tmp/coverage/.coverage \
+		$(RUN_PYTEST) --cov-report=html:/tmp/htmlcov"
+	@docker cp ci-tests:/tmp/coverage ./coverage
+	@docker cp ci-tests:/tmp/htmlcov ./htmlcov
+	@docker rm -f ci-tests || true
 	@$(CI_COMPOSE) down
