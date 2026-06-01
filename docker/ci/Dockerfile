@@ -3,7 +3,7 @@ RUN groupadd --gid 1000 appuser \
     && useradd --uid 1000 --gid appuser --shell /bin/bash --create-home appuser
 WORKDIR /app
 RUN mkdir -p /tmp/coverage /tmp/htmlcov \
-    && chown -R appuser:appuser /tmp/coverage /tmp/htmlcov \
+    && chown -R 775 appuser:appuser /tmp/coverage /tmp/htmlcov \
     && pip install --no-cache-dir uv \
     && chown -R appuser:appuser /app
 USER appuser
