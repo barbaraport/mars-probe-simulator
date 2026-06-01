@@ -39,3 +39,5 @@ jobs:
               uses: astral-sh/setup-uv@v6
             - name: Run CI checks
               run: make ci
+              env:
+                UV_NO_VENV: 1
