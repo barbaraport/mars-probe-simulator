@@ -4,7 +4,7 @@ RUN groupadd --gid 1000 appuser \
 WORKDIR /app
 RUN mkdir -p /tmp/coverage /tmp/htmlcov \
     && chown -R appuser:appuser /tmp/coverage /tmp/htmlcov \
-    && chmod -R 775 /tmp/coverage /tmp/htmlcov \
+    && chmod -R 777 /tmp/coverage /tmp/htmlcov \
     && pip install --no-cache-dir uv \
     && chown -R appuser:appuser /app
 USER appuser
