@@ -5,14 +5,14 @@ TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml 
 
 help:
 	@printf "Available commands:\n"
-	@printf "  make help        Show this help message\n"
-	@printf "  make setup       Install dependencies, enable git hooks, and migrate the DB\n"
-	@printf "  make dev         Start the local development environment\n"
-	@printf "  make test        Run the test suite in the test compose environment\n"
-	@printf "  make check       Run lint, format checks, and mypy\n"
-	@printf "  make db-upgrade  Apply Alembic migrations to the development DB\n"
-	@printf "  make migration   Create a new Alembic migration and apply upgrades\n"
-	@printf "  make clean       Remove build artifacts and stop Docker containers\n"
+	@printf " make help                      Show this help message\n"
+	@printf " make setup                     Install dependencies, enable git hooks, and migrate the DB\n"
+	@printf " make dev                       Start the local development environment\n"
+	@printf " make test                      Run the test suite in the test compose environment\n"
+	@printf " make check                     Run lint, format checks, and mypy\n"
+	@printf " make db-upgrade                Apply Alembic migrations to the development DB\n"
+	@printf " make migration name=\"<msg>\"    Create a new Alembic migration and apply upgrades\n"
+	@printf " make clean                     Remove build artifacts and stop Docker containers\n"
 
 uv-setup:
 	@curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -20,8 +20,8 @@ uv-setup:
 
 uv-uninstall:
 	@uv cache clean
-	@rm -rf "$(uv python dir)"
-	@rm -rf "$(uv tool dir)"
+	@rm -rf "$$(uv python dir)"
+	@rm -rf "$$(uv tool dir)"
 	@rm -f ~/.local/bin/uv ~/.local/bin/uvx
 
 clean:
@@ -71,7 +71,7 @@ db-upgrade:
 	@$(COMPOSE) -f docker/dev/docker-compose.yml down
 
 migration:
+	@if [ -z "$(name)" ]; then echo "Error: name parameter required. Usage: make migration name='description'"; exit 1; fi
 	@${MAKE} db-upgrade
 	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
-	@${MAKE} db-upgrade
-	@$(COMPOSE) -f docker/dev/docker-compose.yml down
+	@$(COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head

@@ -9,6 +9,8 @@ This repository is intentionally organized to show:
 - rigorous test coverage,
 - and developer-friendly local workflows.
 
+[![Mars Probe Simulator API home](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/api_home.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/api_home.png)
+
 ## 🌟 Engineering Highlights
 
 - ⚡ **Async-first architecture** using FastAPI and SQLAlchemy 2.0 async
@@ -30,29 +32,74 @@ This repository is intentionally organized to show:
 - **pytest** – deterministic, fast automated testing
 - **ruff** – linting, formatting, and static checks
 
+## 🐳 Docker & Deployment Ready
+
+This repository includes Docker Compose configuration for both development and test workflows.
+
+- `docker/docker-compose.yml` — core application, Postgres, and Adminer
+- `docker/dev/docker-compose.yml` — development-specific build and runtime configuration
+- `docker/prod/docker-compose.yml` — production-style compose manifest
+
+`make dev` launches the local stack, while `make test` executes the suite in a reproducible test environment.
+
+## 🧰 Code Quality and Developer Experience
+
+This repo includes quality controls that reflect engineering discipline:
+
+- **Husky** for Git hooks
+- **Commitlint** for conventional commit enforcement
+- **`make check`** for linting and static checks
+- environment-specific runtime configuration
+- modular and testable dependency wiring
+
+### 📦 Database Access (Adminer)
+
+Adminer is included as a lightweight tool for inspecting the database during local development.
+
+It enables:
+
+- browsing tables and records
+- running raw SQL queries
+- inspecting schema design
+- validating persisted data quickly
+
+This accelerates development without requiring an external database client.
+
+[![Adminer home](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-1.png)
+
+[![Mars probe simulator tables on Adminer](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-2.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/adminer-2.png)
+
+### ⛳ Local commands
+
+- `make setup` — install dependencies, enable Git hooks, and migrate the database
+- `make dev` — start the local development Docker stack
+- `make test` — run the test suite inside the test Compose environment
+- `make check` — run lint, formatting, and static analysis
+- `make db-upgrade` — apply database migrations
+- `make migration name="<message>"` — create a new Alembic migration
+
 ---
 
 ## 🏗 Architecture Overview
 
 This service uses a layered backend architecture to minimize coupling and reduce risk when shipping changes.
 
-HTTP Layer (FastAPI routes)
-
-↓
-
-Service Layer (business orchestration)
-
-↓
-
-Domain Layer (probe/grid rules)
-
-↓
-
-Repository Layer (data access)
-
-↓
-
-Database (PostgreSQL)
+```text
+             HTTP Layer
+        (FastAPI routes)
+               ↓
+          Service Layer
+   (business orchestration)
+               ↓
+          Domain Layer
+   (probe/grid rules)
+               ↓
+       Repository Layer
+          (data access)
+               ↓
+          Database
+        (PostgreSQL)
+```
 
 Each layer is intentionally responsible for only one concern:
 
@@ -64,6 +111,7 @@ Each layer is intentionally responsible for only one concern:
 
 ## 📁 Project Structure
 
+```text
 app/
 ├── api/            # HTTP entrypoints, routers, dependency wiring
 ├── core/           # configuration, database setup, environment bootstrapping
@@ -73,6 +121,7 @@ app/
 ├── services/       # application business logic and use-case orchestration
 ├── repositories/   # database persistence abstractions
 └── main.py         # application startup and router mounting
+```
 
 This layout is designed to support team development, safe refactoring, and incremental feature growth.
 
@@ -81,6 +130,11 @@ This layout is designed to support team development, safe refactoring, and incre
 ## 🧪 Test Strategy
 
 This repository follows a disciplined test pyramid with clearly defined test boundaries.
+
+```bash
+make setup
+make test
+```
 
 ### ✔ Unit tests
 Validate business logic in isolation, without network or database dependencies.
@@ -103,6 +157,8 @@ Validate real HTTP behavior through FastAPI endpoints.
 
 > This approach yields confidence for both safe refactoring and production-quality delivery.
 
+[![Tests execution](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/tests.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/tests.png)
+
 ---
 
 ## 🔐 Design Principles
@@ -124,29 +180,15 @@ Pydantic schemas and explicit command validation ensure invalid input fails fast
 
 ---
 
-## 🧱 Why this repository stands out
-
-This project was structured to demonstrate backend engineering maturity:
-
-- predictable service boundaries
-- clear domain ownership
-- robust validation and error handling
-- environment-specific configuration
-- containerized local development
-- repeatable migration workflows
-- quality gates through automated tooling
-
----
-
 ## ✅ Prerequisites
 
 - Python `3.12` or higher
 - `uv` for dependency and environment management
-- Docker and Docker Compose for local development and testing
-- Node.js / npm for package management and git hooks
+- `Docker` and `Docker Compose` for local development and testing
+- `Node.js` / `npm` for package management and git hooks
 - `.env` and `.env.test` for environment configuration
 
-## 🧾 Environment files
+### 🧾 Environment files
 
 The app loads configuration from `.env` in development. `.env.test` is used for the test environment.
 
@@ -176,34 +218,18 @@ DB_NAME=test
 ENV=test
 ```
 
-### ⛳ Local commands
-
-- `make setup` — install dependencies, enable Git hooks, and migrate the database
-- `make dev` — start the local development Docker stack
-- `make test` — run the test suite inside the test Compose environment
-- `make check` — run lint, formatting, and static analysis
-- `make db-upgrade` — apply database migrations
-- `make migration name="<message>"` — create a new Alembic migration
-
----
-
 ## 🚀 Getting Started
 
-1. Run `make setup` to install dependencies and prepare the environment.
-2. Run `make dev` to start the app with the local Docker stack.
+Run both commands in sequence to prepare and launch the application:
+
+```bash
+make setup
+make dev
+```
+
+1. Run `make setup` to install dependencies, enable Git hooks, and migrate the database.
+2. Run `make dev` to start the app and its local Docker stack.
 3. Open `http://localhost:8000/docs` to explore the automatically generated OpenAPI UI.
-
----
-
-## 🧰 Code Quality and Developer Experience
-
-This repo includes quality controls that reflect engineering discipline:
-
-- **Husky** for Git hooks
-- **Commitlint** for conventional commit enforcement
-- **`make check`** for linting and static checks
-- environment-specific runtime configuration
-- modular and testable dependency wiring
 
 ---
 
@@ -215,77 +241,52 @@ All endpoints are exposed under `/api/v1`.
   - initialize a Mars probe on a grid
   - accepts `x`, `y`, and `direction`
   - returns the created probe state
+
+[![Probe/Grid setup router](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)
+
 - `PATCH /api/v1/move`
   - execute movement commands against an existing probe
   - valid commands: `L`, `R`, `M`
   - prevents invalid grid moves and invalid commands
+
+[![Grid movement router](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/setup-1.png)
+
 - `GET /api/v1/check`
   - returns current probe coordinates and orientation
+
+[![Available probes list](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/check-1.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/check-1.png)
 
 > OpenAPI docs are available at `/docs` when the app is running.
 
 ---
 
-## 🐳 Docker & Deployment Ready
+## 📌 What this project demonstrates
+This repository demonstrates how I approach backend engineering with senior-level discipline:
 
-This repository includes Docker Compose configuration for both development and test workflows.
+- scalable backend architecture with clear service and domain boundaries
+- async-first implementation aligned with modern Python best practices
+- practical testing discipline across unit, integration, and E2E levels
+- clean, modular code organization built for team collaboration
+- production-minded infrastructure and deployment readiness
+- strong focus on maintainability, validation, and long-term operability
 
-- `docker/docker-compose.yml` — core application, Postgres, and Adminer
-- `docker/dev/docker-compose.yml` — development-specific build and runtime configuration
-- `docker/prod/docker-compose.yml` — production-style compose manifest
+## 🧱 Why this repository stands out
 
-`make dev` launches the local stack, while `make test` executes the suite in a reproducible test environment.
+This project was structured to demonstrate backend engineering maturity:
 
----
-
-## 📦 Database Access (Adminer)
-
-Adminer is included as a lightweight tool for inspecting the database during local development.
-
-It enables:
-
-- browsing tables and records
-- running raw SQL queries
-- inspecting schema design
-- validating persisted data quickly
-
-This accelerates development without requiring an external database client.
+- predictable service boundaries
+- clear domain ownership
+- robust validation and error handling
+- environment-specific configuration
+- containerized local development
+- repeatable migration workflows
+- quality gates through automated tooling
 
 ---
-
-## 📌 What this demonstrates
-
-This project demonstrates how I build backend systems with:
-
-- clear ownership of responsibilities,
-- engineering rigor in design and testing,
-- production-minded infrastructure,
-- and a strong focus on maintainability and team collaboration.
-
-
-```bash
-make setup
-make dev
-```
-
-Open the FastAPI docs at `http://localhost:8000/docs`
-
-## 🧪 Running Tests
-
-```bash
-make setup
-make test
-```
-
----
-
-## 📌 What This Project Demonstrates
-This assessment was used to demonstrate:
-- Ability to design scalable backend architectures
-- Strong understanding of Python async systems
-- Practical testing discipline (not just unit tests, but full pyramid coverage)
-- Clean code organization suitable for team environments
-- Production-level thinking (not just “works locally” implementations)
 
 ## 🧠 Closing Note
 This project was intentionally structured beyond the minimum requirements to reflect real-world backend engineering practices, including maintainability, scalability, and test strategy design.
+
+<p align="center">
+  <img src="https://ForTheBadge.com/images/badges/built-with-love.svg">
+</p>
