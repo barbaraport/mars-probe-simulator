@@ -19,10 +19,10 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: coverage-html
-                  path: htmlcov
+                  path: /tmp/htmlcov
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v4
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: htmlcov
+                  publish_dir: /tmp/htmlcov
