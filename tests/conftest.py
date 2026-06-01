@@ -1,10 +1,12 @@
 from alembic import command
 from alembic.config import Config
 from httpx import ASGITransport, AsyncClient
+import asyncio
 import pytest
 import pytest_asyncio
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
+    AsyncConnection,
     AsyncSession,
     create_async_engine,
     async_sessionmaker,
@@ -16,11 +18,23 @@ from app.main import app
 TEST_DB_URL = str(settings.DATABASE_URL)
 
 
+async def _truncate_test_tables(conn: AsyncConnection | AsyncSession):
+    await conn.execute(text("""TRUNCATE TABLE grid, probe RESTART IDENTITY CASCADE"""))
+
+
 @pytest.fixture(scope="session", autouse=True)
 def migrate_database():
     alembic_config = Config("alembic.ini")
     alembic_config.set_main_option("sqlalchemy.url", TEST_DB_URL)
     command.upgrade(alembic_config, "head")
+
+    engine = create_async_engine(TEST_DB_URL, echo=False)
+
+    async def reset_db():
+        async with engine.begin() as conn:
+            await _truncate_test_tables(conn)
+
+    asyncio.run(reset_db())
     yield
 
 
@@ -31,9 +45,7 @@ async def test_session():
 
     async with test_session() as session:
         yield session
-        await session.execute(
-            text("""TRUNCATE TABLE grid, probe RESTART IDENTITY CASCADE""")
-        )
+        await _truncate_test_tables(session)
         await session.commit()
 
 
