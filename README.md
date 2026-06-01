@@ -1,115 +1,154 @@
 # 🚀 mars-probe-simulator
 
-A production-style backend API built with **FastAPI**, designed to demonstrate clean architecture, testability, and real-world engineering practices using modern Python tooling.
+A production-grade backend API built with **FastAPI**, designed to demonstrate how I structure scalable, maintainable, and testable systems in a real-world engineering environment.
 
-This project was developed as a technical assessment and reflects how I structure, scale, and maintain backend systems in production environments.
+This repository is intentionally organized to show:
+- clean architectural separation,
+- async-first business logic,
+- infrastructure-ready persistence,
+- rigorous test coverage,
+- and developer-friendly local workflows.
 
----
+## 🌟 Engineering Highlights
 
-## 📌 Key Highlights
+- ⚡ **Async-first architecture** using FastAPI and SQLAlchemy 2.0 async
+- 🧱 **Layered domain model** with clear API / service / domain / repository boundaries
+- 🧪 **Full testing pyramid**: unit, integration, and E2E coverage
+- 🐘 **PostgreSQL-ready** data layer with Alembic migrations and database contract safety
+- 🛠 **Quality tooling**: `ruff`, automated hooks, and environment-specific workflows
+- 🧩 **Extendable design** for future features and production adoption
 
-- ⚡ Modern **Python** stack using `uv` for dependency and environment management
-- 🧱 Clean layered architecture (API / Service / Repository separation)
-- 🧪 Comprehensive testing strategy (unit, integration, E2E)
-- 🐘 **PostgreSQL-ready** with migration support with ***Alembic*
-- 🔁 Async-first design throughout the stack
-- 🧩 Modular structure designed for scalability and team collaboration
-- 🧼 Strict separation of concerns and dependency injection patterns
+## ⚙️ Tech Stack
+
+- **FastAPI** – high-performance async HTTP layer
+- **uv** – dependency and environment management
+- **Pydantic v2** – validation and schema contracts
+- **SQLAlchemy 2.0 (async)** – async ORM and persistence
+- **PostgreSQL** – production-grade relational storage
+- **Alembic** – migrations and schema versioning
+- **Docker / Docker Compose** – consistent local development and CI-style test environments
+- **pytest** – deterministic, fast automated testing
+- **ruff** – linting, formatting, and static checks
 
 ---
 
 ## 🏗 Architecture Overview
 
-The project follows a layered architecture designed for maintainability and scalability:
-HTTP Layer (FastAPI Routes)
+This service uses a layered backend architecture to minimize coupling and reduce risk when shipping changes.
+
+HTTP Layer (FastAPI routes)
+
 ↓
-Service Layer (Business Logic)
+
+Service Layer (business orchestration)
+
 ↓
-Domain Layer (Core Business Logic)
+
+Domain Layer (probe/grid rules)
+
 ↓
-Repository Layer (Data Access)
+
+Repository Layer (data access)
+
 ↓
+
 Database (PostgreSQL)
 
-Each layer has a clearly defined responsibility:
+Each layer is intentionally responsible for only one concern:
 
-- **Routes** → request/response handling only
-- **Services** → app business rules and orchestration
-- **Domain** → core probe and grid business rules
-- **Repositories** → database abstraction
-- **Models/Schemas** → data integrity and validation
-
----
+- **Routes** → translate HTTP requests into application input/output
+- **Services** → orchestrate business rules, validation, and workflows
+- **Domain** → encapsulate core probe/grid logic and invariants
+- **Repositories** → isolate persistence specifics from domain behavior
+- **Schemas/Models** → enforce contracts and data integrity
 
 ## 📁 Project Structure
-app/
-├── api/ # HTTP layer (routers, dependencies, middleware)
-├── core/ # Config, security, logging, database setup
-├── domain/ # Core probe and grid logic
-├── models/ # SQLAlchemy ORM models
-├── schemas/ # Pydantic DTOs (request/response models)
-├── services/ # Business logic layer
-├── repositories/ # Database access layer
-└── main.py # Application entry point
 
-This structure is designed to remain stable as the codebase grows, avoiding tight coupling between layers.
+app/
+├── api/            # HTTP entrypoints, routers, dependency wiring
+├── core/           # configuration, database setup, environment bootstrapping
+├── domain/         # business rules, entities, command handling
+├── models/         # SQLAlchemy ORM models and schema mapping
+├── schemas/        # Pydantic request/response models and validation
+├── services/       # application business logic and use-case orchestration
+├── repositories/   # database persistence abstractions
+└── main.py         # application startup and router mounting
+
+This layout is designed to support team development, safe refactoring, and incremental feature growth.
 
 ---
 
-## � Prerequisites
-- `uv` for Python dependency and environment management
+## 🧪 Test Strategy
+
+This repository follows a disciplined test pyramid with clearly defined test boundaries.
+
+### ✔ Unit tests
+Validate business logic in isolation, without network or database dependencies.
+- Services
+- Domain rules
+- Validation utilities
+- Command parsing
+
+### ✔ Integration tests
+Verify persistence and repository behavior against a real database.
+- SQLAlchemy queries
+- repository contracts
+- transactional behavior
+
+### ✔ End-to-end tests
+Validate real HTTP behavior through FastAPI endpoints.
+- route contracts
+- request/response validation
+- business workflows
+
+> This approach yields confidence for both safe refactoring and production-quality delivery.
+
+---
+
+## 🔐 Design Principles
+
+### Service-oriented business logic
+The service layer isolates orchestration and enables reuse across APIs, CLI tools, or background workers.
+
+### Repository abstraction
+Database access is decoupled from domain rules, making the core logic independent of persistence mechanism.
+
+### Dependency injection
+FastAPI dependencies are used to keep wiring explicit, replaceable, and testable.
+
+### Async-first implementation
+The app is built around async endpoints, async sessions, and non-blocking IO for modern backend performance.
+
+### Contract-first validation
+Pydantic schemas and explicit command validation ensure invalid input fails fast and clearly.
+
+---
+
+## 🧱 Why this repository stands out
+
+This project was structured to demonstrate backend engineering maturity:
+
+- predictable service boundaries
+- clear domain ownership
+- robust validation and error handling
+- environment-specific configuration
+- containerized local development
+- repeatable migration workflows
+- quality gates through automated tooling
+
+---
+
+## ✅ Prerequisites
+
+- Python `3.12` or higher
+- `uv` for dependency and environment management
 - Docker and Docker Compose for local development and testing
 - Node.js / npm for package management and git hooks
-- Optional: `.env` file for environment configuration when running Docker Compose
-
-## 🚀 Getting Started
-1. Run `make setup` to install Python and Node dependencies, configure git hooks, and migrate the database.
-2. Run `make dev` to start the development stack.
-3. Open `http://localhost:8000/docs` to explore the FastAPI OpenAPI UI.
-
-## ��� API Routes
-All API endpoints are mounted under the `/api/v1` prefix and exposed through FastAPI. The key routes are:
-
-- `POST /api/v1/setup`
-  - Initialize a Mars probe on a grid
-  - Accepts `x`, `y`, and `direction`
-  - Returns the created probe state
-- `PATCH /api/v1/move`
-  - Move an existing probe using a command string
-  - Valid commands are `L`, `R`, and `M`
-  - Validates the command and prevents invalid grid movement
-- `GET /api/v1/check`
-  - Retrieve current coordinates and orientation for all probes
-
-You can also explore the automatically generated OpenAPI documentation at `/docs` when the app is running.
-
----
-
-## ⚙️ Tech Stack
-
-- **FastAPI** – High-performance async API framework
-- **uv** – Fast dependency and environment management
-- **Pydantic v2** – Data validation and serialization
-- **SQLAlchemy 2.0 (async)** – ORM layer
-- **PostgreSQL** – Primary database
-- **Alembic** – Database migrations
-- **Docker / Docker Compose** – Local development, database, and test environment orchestration
-- **pytest** – Testing framework
-- **ruff** – Linting and formatting
-
-## 🐳 Docker Usage
-This project includes Docker Compose configuration for local development and testing.
-
-- `docker/docker-compose.yml` defines the application, Postgres database, and Adminer services.
-- `docker/dev/docker-compose.yml` provides development-specific build configuration.
-- `make dev` starts the local development stack using Docker Compose.
-- `make test` runs pytest inside the test Compose environment.
-- `make db-upgrade` applies Alembic migrations in the development Docker environment.
-
-Use a `.env` and `.env.test` files to configure service ports and database credentials for local runs.
+- `.env` and `.env.test` for environment configuration
 
 ## 🧾 Environment files
-The app loads configuration from `.env` by default in development. The `.env.test` file is used when running tests.
+
+The app loads configuration from `.env` in development. `.env.test` is used for the test environment.
 
 Example `.env`:
 
@@ -137,120 +176,110 @@ DB_NAME=test
 ENV=test
 ```
 
+### ⛳ Local commands
+
+- `make setup` — install dependencies, enable Git hooks, and migrate the database
+- `make dev` — start the local development Docker stack
+- `make test` — run the test suite inside the test Compose environment
+- `make check` — run lint, formatting, and static analysis
+- `make db-upgrade` — apply database migrations
+- `make migration name="<message>"` — create a new Alembic migration
+
+---
+
+## 🚀 Getting Started
+
+1. Run `make setup` to install dependencies and prepare the environment.
+2. Run `make dev` to start the app with the local Docker stack.
+3. Open `http://localhost:8000/docs` to explore the automatically generated OpenAPI UI.
+
+---
+
+## 🧰 Code Quality and Developer Experience
+
+This repo includes quality controls that reflect engineering discipline:
+
+- **Husky** for Git hooks
+- **Commitlint** for conventional commit enforcement
+- **`make check`** for linting and static checks
+- environment-specific runtime configuration
+- modular and testable dependency wiring
+
+---
+
+## 🚧 API Endpoints
+
+All endpoints are exposed under `/api/v1`.
+
+- `POST /api/v1/setup`
+  - initialize a Mars probe on a grid
+  - accepts `x`, `y`, and `direction`
+  - returns the created probe state
+- `PATCH /api/v1/move`
+  - execute movement commands against an existing probe
+  - valid commands: `L`, `R`, `M`
+  - prevents invalid grid moves and invalid commands
+- `GET /api/v1/check`
+  - returns current probe coordinates and orientation
+
+> OpenAPI docs are available at `/docs` when the app is running.
+
+---
+
+## 🐳 Docker & Deployment Ready
+
+This repository includes Docker Compose configuration for both development and test workflows.
+
+- `docker/docker-compose.yml` — core application, Postgres, and Adminer
+- `docker/dev/docker-compose.yml` — development-specific build and runtime configuration
+- `docker/prod/docker-compose.yml` — production-style compose manifest
+
+`make dev` launches the local stack, while `make test` executes the suite in a reproducible test environment.
+
+---
+
 ## 📦 Database Access (Adminer)
 
-I’ve included **Adminer** as an optional database management tool to simplify database inspection during local development and evaluation.
+Adminer is included as a lightweight tool for inspecting the database during local development.
 
-Adminer provides a lightweight web interface that allows you to:
+It enables:
 
-- Browse database tables and records
-- Execute raw SQL queries
-- Inspect schema structure
-- Debug and validate persisted data
+- browsing tables and records
+- running raw SQL queries
+- inspecting schema design
+- validating persisted data quickly
 
-This helps streamline development by removing the need for external database clients while still giving full visibility into the database layer when needed.
-
----
-
-## 🧪 Testing Strategy
-
-Testing is structured according to a **test pyramid model**:
-
-### ✔ Unit Tests
-Focus on business logic in isolation.
-
-- Services
-- Validators
-- Utility functions
-- Core business logic
-
-No database or HTTP dependencies.
+This accelerates development without requiring an external database client.
 
 ---
 
-### ✔ Integration Tests
-Validate interaction with real infrastructure.
+## 📌 What this demonstrates
 
-- Database queries (PostgreSQL)
-- Repository layer behavior
+This project demonstrates how I build backend systems with:
 
----
+- clear ownership of responsibilities,
+- engineering rigor in design and testing,
+- production-minded infrastructure,
+- and a strong focus on maintainability and team collaboration.
 
-### ✔ End-to-End Tests
-Validate full system behavior via HTTP.
 
-- API endpoints
-
-These tests ensure the system behaves correctly from a client perspective.
-
----
-
-## 🔐 Design Decisions
-
-### 1. Service-Oriented Business Logic
-Business rules are isolated in services to ensure:
-- Reusability across interfaces (API, workers, scripts)
-- Easier unit testing
-- Clear separation from transport layer
-
----
-
-### 2. Repository Pattern
-Database logic is abstracted into repositories to:
-- Decouple persistence from business logic
-- Improve testability
-- Allow future database flexibility
-
----
-
-### 3. Dependency Injection (FastAPI)
-FastAPI’s dependency system is used to:
-- Improve modularity
-- Enable clean overrides in testing
-- Reduce tight coupling between components
-
----
-
-### 4. Async-First Design
-The entire stack is designed around async execution:
-- FastAPI async endpoints
-- Async SQLAlchemy sessions
-- Non-blocking I/O operations
-
----
-
-## 🧱 Why This Architecture
-
-This structure was chosen to reflect how I would build and maintain a production backend system:
-
-- Easy to scale across teams
-- Clear ownership of components
-- High testability at every layer
-- Minimal coupling between domain and infrastructure
-- Ready for real-world deployment patterns
-
----
-
-## 🚀 Running the Project
-
-```make setup```
-```make dev```
+```bash
+make setup
+make dev
+```
 
 Open the FastAPI docs at `http://localhost:8000/docs`
 
-### ⛳ Local commands
-- `make setup` — install dependencies, enable husky hooks, and migrate the database
-- `make dev` — start the local development Docker stack
-- `make test` — run the test suite inside the test Compose environment
-- `make check` — run lint, format checks, and static type analysis
-- `make db-upgrade` — apply migrations to the local development database
-- `make migration name="<message>"` — create a new Alembic migration after database changes
+## 🧪 Running Tests
 
-🧪 Running Tests
+```bash
+make setup
+make test
+```
 
-```make test```
+---
 
-📌 What This Project Demonstrates
+## 📌 What This Project Demonstrates
 This assessment was used to demonstrate:
 - Ability to design scalable backend architectures
 - Strong understanding of Python async systems
@@ -258,5 +287,5 @@ This assessment was used to demonstrate:
 - Clean code organization suitable for team environments
 - Production-level thinking (not just “works locally” implementations)
 
-🧠 Closing Note
+## 🧠 Closing Note
 This project was intentionally structured beyond the minimum requirements to reflect real-world backend engineering practices, including maintainability, scalability, and test strategy design.
