@@ -1,4 +1,4 @@
-name: Run tests and upload report artifact
+name: Run tests + Deploy report
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
