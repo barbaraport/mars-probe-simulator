@@ -17,6 +17,10 @@ class MoveRequest(BaseModel):
 
 class MoveResponse(BaseModel):
     id: UUID = Field(..., description="Saved probe UUID")
-    x: int = Field(..., ge=0, description="Grid `x` size, greater than or equal zero.")
-    y: int = Field(..., ge=0, description="Grid `y` size, greater than or equal zero.")
-    direction: Direction = Field(..., description="Initial probe cardinal orientation.")
+    x: int = Field(
+        ..., ge=0, description="Probe `x` position, greater than or equal to zero."
+    )
+    y: int = Field(
+        ..., ge=0, description="Probe `y` position, greater than or equal to zero."
+    )
+    direction: Direction = Field(..., description="Probe cardinal orientation.")
