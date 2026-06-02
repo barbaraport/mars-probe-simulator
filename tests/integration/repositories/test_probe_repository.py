@@ -119,7 +119,7 @@ async def test_when_save_probe_then_should_merge_and_return_saved_probe(
     assert saved_probe.grid is not None
     assert saved_probe.grid.id is not None
     assert saved_probe.grid.x == 5
-    assert saved_probe.grid.x == 5
+    assert saved_probe.grid.y == 5
 
 
 @pytest.mark.asyncio
