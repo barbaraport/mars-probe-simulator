@@ -9,6 +9,9 @@ This repository is intentionally organized to show:
 - rigorous test coverage,
 - and developer-friendly local workflows.
 
+> ✅ Test coverage results are deployed automatically on merges to `main`.
+> View the deployed coverage report here: [https://barbaraport.github.io/mars-probe-simulator/](https://barbaraport.github.io/mars-probe-simulator/)
+
 [![Mars Probe Simulator API home](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/api_home.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/api_home.png)
 
 ## 🌟 Engineering Highlights
@@ -131,7 +134,7 @@ This layout is designed to support team development, safe refactoring, and incre
 
 This repository follows a disciplined test pyramid with clearly defined test boundaries.
 
-To run the test suite, use the provided make commands. `make setup` initializes the development environment and installs dependencies, while `make test` executes all tests across the pyramid. These commands streamline the setup and test execution process, ensuring consistency across the development team.
+To run the test suite, use the provided make commands. `make setup` initializes the development environment and installs dependencies, while `make test` executes all tests across the pyramid.
 
 ```bash
 make setup
@@ -170,6 +173,8 @@ tests/
 > This approach yields confidence for both safe refactoring and production-quality delivery.
 
 [![Tests execution](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/tests.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/tests.png)
+
+> 🧪✅ Coverage results are deployed automatically on merges to `main`; inspect the latest report here: [https://barbaraport.github.io/mars-probe-simulator/](https://barbaraport.github.io/mars-probe-simulator/)
 
 ---
 
