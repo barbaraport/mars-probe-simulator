@@ -12,6 +12,13 @@ class ProbeRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    async def is_ready(self) -> bool:
+        try:
+            await self.session.execute(select(1))
+            return True
+        except Exception:
+            return False
+
     async def setup(
         self,
         position: Probe,
