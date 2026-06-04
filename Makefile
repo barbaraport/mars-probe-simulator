@@ -1,8 +1,8 @@
 .PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade ci
 
 BASE_COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
-CI_TEST_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml 
-LOCAL_TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/dev/docker-compose.yml
+CI_TEST_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/test/docker-compose.yml 
+LOCAL_TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/test/docker-compose.yml
 
 RUN_PYTEST=uv run pytest --cov=app
 
