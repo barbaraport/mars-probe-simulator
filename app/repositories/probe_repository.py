@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.core.logging import Logger
 from app.models.Grid import Grid
 from app.models.Probe import Probe
 
@@ -16,7 +17,8 @@ class ProbeRepository:
         try:
             await self.session.execute(select(1))
             return True
-        except Exception:
+        except Exception as e:
+            Logger.error(f"Database readiness check failed: {e}", exc_info=True)
             return False
 
     async def setup(

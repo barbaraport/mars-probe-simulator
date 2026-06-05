@@ -35,15 +35,137 @@ This repository is intentionally organized to show:
 - **pytest** – deterministic, fast automated testing
 - **ruff** – linting, formatting, and static checks
 
-### 🐳 Docker & Deployment Ready
+### 🐳 Docker & Environment Strategy
 
-This repository includes Docker Compose configuration for both development and test workflows.
+This project uses environment-specific Docker configurations to reflect real-world deployment workflows.
 
-- `docker/docker-compose.yml` — core application, Postgres, and Adminer
-- `docker/dev/docker-compose.yml` — development-specific build and runtime configuration
-- `docker/prod/docker-compose.yml` — production-style compose manifest
+Each environment has different operational goals and therefore different build/runtime requirements:
 
-`make dev` launches the local stack, while `make test` executes the suite in a reproducible test environment.
+| Environment | Purpose |
+|------------|----------|
+| Development | Developer productivity, hot reload, debugging, and local tooling |
+| Test | Deterministic execution of automated test suites |
+| Production | Lean runtime image with only the dependencies required to run the application |
+
+This separation helps prevent development-only tooling from leaking into production images while keeping local workflows fast and reproducible.
+
+```text
+docker/
+├── prometheus.yml            # prometheus configuration
+├── docker-compose.yml        # shared/base services
+├── dev/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+├── test/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+└── prod/
+    ├── Dockerfile
+    └── docker-compose.yml
+```
+
+Key benefits:
+
+- isolated environment concerns
+- predictable builds
+- production-safe container images
+- reproducible development and testing workflows
+- reduced operational risk
+
+## 📊 Observability
+
+This application includes production-oriented observability capabilities based on modern telemetry standards.
+
+### Signals
+
+The service emits the three fundamental observability signals:
+
+- **Logs** (structured JSON logging)
+- **Metrics** (Prometheus)
+- **Traces** (OpenTelemetry)
+
+### Structured Logging
+
+All application logs are emitted as structured JSON and include request correlation metadata.
+
+Example:
+
+
+
+### Health Endpoints
+
+Operational endpoints are available for runtime monitoring.
+
+| Endpoint | Purpose |
+|-----------|----------|
+| `/health` | Liveness check |
+| `/ready` | Readiness check including database connectivity |
+| `/metrics` | Prometheus metrics endpoint |
+
+### Metrics
+
+Metrics are exposed using Prometheus-compatible format.
+
+Collected metrics include:
+
+- request count
+- request duration
+- in-flight requests
+- error rates
+- endpoint-specific statistics
+
+### Distributed Tracing
+
+The application is instrumented with OpenTelemetry and automatically generates traces for:
+
+- FastAPI requests
+- service execution
+- repository operations
+- SQLAlchemy database interactions
+
+### Local Observability Stack
+
+Development environments include a complete local observability stack.
+
+| Service | URL |
+|----------|------|
+| FastAPI Docs | http://localhost:8000/docs |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3000 |
+| Jaeger | http://localhost:16686 |
+| Adminer | http://localhost:8080 |
+
+### Tooling
+
+#### OpenTelemetry
+
+Vendor-neutral telemetry standard used to generate traces and metrics.
+
+https://opentelemetry.io/
+
+#### Prometheus
+
+Metrics collection and time-series database.
+
+https://prometheus.io/
+
+#### Grafana
+
+Dashboarding and metrics visualization.
+
+https://grafana.com/
+
+#### Jaeger
+
+Distributed tracing backend used to inspect request execution flows.
+
+https://www.jaegertracing.io/
+
+### Datadog Compatibility
+
+The application is instrumented through OpenTelemetry and can export telemetry to Datadog or any OTLP-compatible observability backend without changes to application code.
+
+This allows the observability backend to be swapped while keeping instrumentation vendor-neutral.
 
 ### 🧰 Code Quality and Developer Experience
 

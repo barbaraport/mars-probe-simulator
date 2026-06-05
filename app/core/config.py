@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     ADMINER_PORT: int
     ENV: Literal["dev", "test"]
 
+    GRAFANA_ADMIN_USER: str
+    GRAFANA_ADMIN_USER_PASSWORD: SecretStr
+
     @computed_field(repr=False)
     def DATABASE_URL(self) -> str:
         return (

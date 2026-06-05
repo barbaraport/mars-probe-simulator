@@ -37,3 +37,7 @@ class Logger:
     @classmethod
     def log(cls, event: str, **kwargs: Any) -> None:
         cls._logger.info(event.upper(), **kwargs)
+
+    @classmethod
+    def error(cls, event: str, **kwargs: Any) -> None:
+        cls._logger.error(event.upper(), **kwargs)
