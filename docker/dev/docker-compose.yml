@@ -1,3 +1,6 @@
+include:
+  - docker-compose.observability.yml
+
 services:
   mars-probe-simulator-app:
     build:
@@ -12,27 +15,3 @@ services:
       - "${ADMINER_PORT}:8080"
     environment:
       ADMINER_DEFAULT_SERVER: mars-probe-simulator-db
-
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_USER_PASSWORD}
-    depends_on:
-      - prometheus
-
-  jaeger:
-    image: jaegertracing/jaeger
-    ports:
-      - "16686:16686"
-      - "4317:4317"
-      - "4318:4318"
