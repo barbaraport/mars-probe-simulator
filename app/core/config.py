@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 ENV_FILES = {
     "dev": ".env",
     "test": ".env.test",
+    "prod": ".env.prod",
 }
 
 
@@ -18,7 +19,7 @@ class Settings(BaseSettings):
     DB_NAME: str
     APP_PORT: int
     ADMINER_PORT: int
-    ENV: Literal["dev", "test"]
+    ENV: Literal["dev", "test", "prod"]
 
     GRAFANA_ADMIN_USER: str
     GRAFANA_ADMIN_USER_PASSWORD: SecretStr

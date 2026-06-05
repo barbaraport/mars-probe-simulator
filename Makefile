@@ -1,6 +1,7 @@
-.PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade ci
+.PHONY: help uv-setup uv-uninstall clean setup deps dev check format test prod migration db-upgrade ci load-test
 
-BASE_COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
+DEV_COMPOSE=docker-compose --env-file ./.env -f docker/docker-compose.yml
+PROD_COMPOSE=docker-compose --env-file ./.env.prod -f docker/docker-compose.yml
 CI_TEST_COMPOSE=docker compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/test/docker-compose.yml 
 LOCAL_TEST_COMPOSE=docker-compose --env-file ./.env.test -f docker/docker-compose.yml -f docker/test/docker-compose.yml
 
@@ -35,7 +36,7 @@ clean:
 	@rm -rf .venv
 	@rm -f .coverage
 	@rm -rf .pytest_cache
-	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml down --remove-orphans -v
+	@$(DEV_COMPOSE) -f docker/dev/docker-compose.yml down --remove-orphans -v
 
 setup:
 	@${MAKE} uv-setup
@@ -60,24 +61,24 @@ format:
 	@uv run ruff format .
 
 dev:
-	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml up --build
+	@$(DEV_COMPOSE) -f docker/dev/docker-compose.yml up --build
 
 prod:
-	@$(BASE_COMPOSE) -f docker/prod/docker-compose.yml up --build
+	@$(PROD_COMPOSE) -f docker/prod/docker-compose.yml up --build
 
 test:
 	@$(LOCAL_TEST_COMPOSE) run --rm mars-probe-simulator-app $(RUN_PYTEST) --cov-report=html
 	@$(LOCAL_TEST_COMPOSE) down
 
 db-upgrade:
-	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
-	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml down
+	@$(DEV_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+	@$(DEV_COMPOSE) -f docker/dev/docker-compose.yml down
 
 migration:
 	@if [ -z "$(name)" ]; then echo "Error: name parameter required. Usage: make migration name='description'"; exit 1; fi
 	@${MAKE} db-upgrade
-	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
-	@$(BASE_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
+	@$(DEV_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic revision --autogenerate -m "$(name)"
+	@$(DEV_COMPOSE) -f docker/dev/docker-compose.yml run --rm mars-probe-simulator-app uv run alembic upgrade head
 
 ci:
 	@$(CI_TEST_COMPOSE) run --name ci-tests mars-probe-simulator-app sh -c "\
