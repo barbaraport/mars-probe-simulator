@@ -8,7 +8,7 @@ from app.services.check_service import CheckService
 from app.services.move_service import MoveService
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.services.readiness_service import ReadinessService
+from app.services.ready_service import ReadyService
 from app.services.setup_service import SetupService
 
 
@@ -34,8 +34,8 @@ def get_check_service(repository: ProbeRepositoryDependency) -> CheckService:
     return CheckService(repository)
 
 
-def get_readiness_service(repository: ProbeRepositoryDependency) -> ReadinessService:
-    return ReadinessService(repository)
+def get_readiness_service(repository: ProbeRepositoryDependency) -> ReadyService:
+    return ReadyService(repository)
 
 
 MoveServiceDependency = Annotated[
@@ -53,7 +53,7 @@ SetupServiceDependency = Annotated[
     Depends(get_setup_service),
 ]
 
-ReadinessServiceDependency = Annotated[
-    ReadinessService,
+ReadyServiceDependency = Annotated[
+    ReadyService,
     Depends(get_readiness_service),
 ]
