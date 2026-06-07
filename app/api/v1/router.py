@@ -7,7 +7,7 @@ from app.api.v1.endpoints.check_router import check_router
 
 
 api_router = APIRouter()
-api_router.include_router(ready_router, prefix="/readiness", tags=["Readiness check"])
+api_router.include_router(ready_router, prefix="/ready", tags=["API readiness check"])
 api_router.include_router(
     setup_router, prefix="/setup", tags=["Setup probe and its grid"]
 )

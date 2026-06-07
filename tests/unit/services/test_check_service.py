@@ -20,7 +20,7 @@ async def test_when_fetching_3_probes_then_should_have_list_with_3_probes():
     repo.find_all.return_value = probes
 
     service = CheckService(repo)
-    probes_list = await service.check()
+    probes_list = await service.process()
 
     assert len(probes_list.probes) == len(probes)
     for original, returned in zip(probes, probes_list.probes):
@@ -36,7 +36,7 @@ async def test_when_fetching_no_probes_then_should_receive_empty_list():
     repo.find_all.return_value = []
 
     service = CheckService(repo)
-    probes_list = await service.check()
+    probes_list = await service.process()
 
     assert len(probes_list.probes) == 0
 
@@ -51,7 +51,7 @@ async def test_when_repository_raises_then_service_raises_exception():
     service = CheckService(repo)
 
     with pytest.raises(HTTPException) as exc_info:
-        await service.check()
+        await service.process()
 
     assert exc_info.value.status_code == 500
     assert exc_info.value.detail == {

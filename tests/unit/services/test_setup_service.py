@@ -27,7 +27,7 @@ async def test_when_creating_valid_probe_and_grid_then_should_have_success():
 
     service = SetupService(repo)
 
-    created_probe = await service.setup(
+    created_probe = await service.process(
         SetupRequest(x=20, y=20, direction=Direction.EAST)
     )
 
@@ -46,7 +46,7 @@ async def test_when_repository_raises_then_service_raises_unexpected_error():
     service = SetupService(repo)
 
     with pytest.raises(HTTPException) as exc_info:
-        await service.setup(SetupRequest(x=20, y=20, direction=Direction.EAST))
+        await service.process(SetupRequest(x=20, y=20, direction=Direction.EAST))
 
     repo.setup.assert_called_once()
 

@@ -15,7 +15,7 @@ class SetupService:
     ) -> None:
         self.repository = repository
 
-    async def setup(
+    async def process(
         self,
         setup: SetupRequest,
     ) -> SetupResponse:

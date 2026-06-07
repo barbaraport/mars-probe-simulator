@@ -48,4 +48,4 @@ async def setup_probe(setup: SetupRequest, service: SetupServiceDependency):
     """
     Initialize a Mars probe at the specified coordinates and direction.
     """
-    return await service.setup(setup)
+    return await service.process(setup)

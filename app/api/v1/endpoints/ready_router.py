@@ -25,4 +25,4 @@ async def ready_check(service: ReadyServiceDependency):
     """
     Check the readiness of the application.
     """
-    return await service.readiness_check()
+    return await service.process()

@@ -18,7 +18,7 @@ class MoveService:
     ) -> None:
         self.repository = repository
 
-    async def move(
+    async def process(
         self,
         move: MoveRequest,
     ) -> MoveResponse:

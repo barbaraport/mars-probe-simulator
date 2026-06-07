@@ -34,7 +34,7 @@ def get_check_service(repository: ProbeRepositoryDependency) -> CheckService:
     return CheckService(repository)
 
 
-def get_readiness_service(repository: ProbeRepositoryDependency) -> ReadyService:
+def get_ready_service(repository: ProbeRepositoryDependency) -> ReadyService:
     return ReadyService(repository)
 
 
@@ -55,5 +55,5 @@ SetupServiceDependency = Annotated[
 
 ReadyServiceDependency = Annotated[
     ReadyService,
-    Depends(get_readiness_service),
+    Depends(get_ready_service),
 ]

@@ -10,7 +10,7 @@ class ReadyService:
     ) -> None:
         self.repository = repository
 
-    async def readiness_check(self) -> ReadyResponse:
+    async def process(self) -> ReadyResponse:
         is_ready = await self.repository.is_ready()
 
         if is_ready:

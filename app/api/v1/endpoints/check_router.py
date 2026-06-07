@@ -39,4 +39,4 @@ async def check_probes(service: CheckServiceDependency):
     """
     Get the current position and orientation of all Mars probes.
     """
-    return await service.check()
+    return await service.process()

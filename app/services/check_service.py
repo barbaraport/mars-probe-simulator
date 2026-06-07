@@ -11,7 +11,7 @@ class CheckService:
     ) -> None:
         self.repository = repository
 
-    async def check(
+    async def process(
         self,
     ) -> CheckResponse:
         try:
