@@ -1,6 +1,7 @@
 services:
   prometheus:
     image: prom/prometheus
+    restart: "always"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ../.observability-data/${ENV}/prometheus:/prometheus
@@ -9,6 +10,7 @@ services:
 
   grafana:
     image: grafana/grafana
+    restart: "always"
     ports:
       - "3000:3000"
     environment:
@@ -17,10 +19,12 @@ services:
     depends_on:
       - prometheus
     volumes:
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
       - ../.observability-data/${ENV}/grafana:/var/lib/grafana
 
   jaeger:
     image: jaegertracing/jaeger
+    restart: "always"
     ports:
       - "16686:16686"
       - "4317:4317"

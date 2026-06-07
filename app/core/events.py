@@ -1,5 +1,6 @@
 from enum import Enum
 
+from app.core.logging import Logger
 from app.core.metrics import (
     probe_created_total,
     probe_invalid_setups_total,
@@ -17,17 +18,37 @@ class ProbeEvents(Enum):
 
 class ProbeMetrics:
     @staticmethod
-    def probe_created():
+    def inc_probe_created():
         probe_created_total.inc()
+        Logger.log(
+            "probe_created_total",
+            operation="increment",
+            new_value=probe_created_total._value.get(),
+        )
 
     @staticmethod
-    def probe_command_sent():
+    def inc_probe_command_sent():
         probe_commands_total.inc()
+        Logger.log(
+            "probe_commands_total",
+            operation="increment",
+            new_value=probe_commands_total._value.get(),
+        )
 
     @staticmethod
-    def probe_invalid_setup():
+    def inc_probe_invalid_setup():
         probe_invalid_setups_total.inc()
+        Logger.log(
+            "probe_invalid_setups_total",
+            operation="increment",
+            new_value=probe_invalid_setups_total._value.get(),
+        )
 
     @staticmethod
-    def probe_invalid_command():
+    def inc_probe_invalid_command():
         probe_invalid_commands_total.inc()
+        Logger.log(
+            "probe_invalid_commands_total",
+            operation="increment",
+            new_value=probe_invalid_commands_total._value.get(),
+        )

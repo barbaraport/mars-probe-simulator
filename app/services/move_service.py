@@ -53,7 +53,7 @@ class MoveService:
 
             Observability.emit(
                 ProbeEvents.PROBE_COMMAND_SENT,
-                probe_id=probe.id,
+                probe_id=str(probe.id),
                 command=move.command,
                 from_x=probe.x,
                 from_y=probe.y,
@@ -72,7 +72,7 @@ class MoveService:
         except InvalidCommandError as e:
             Observability.emit(
                 ProbeEvents.PROBE_INVALID_COMMAND,
-                probe_id=probe.id,
+                probe_id=str(probe.id),
                 command=move.command,
             )
             raise HTTPException(
@@ -85,7 +85,7 @@ class MoveService:
         except InvalidMovementError as e:
             Observability.emit(
                 ProbeEvents.PROBE_INVALID_COMMAND,
-                probe_id=probe.id,
+                probe_id=str(probe.id),
                 command=move.command,
                 from_x=probe.x,
                 from_y=probe.y,
@@ -104,7 +104,7 @@ class MoveService:
         except Exception:
             Logger.log(
                 "move_unexpected_error",
-                probe_id=probe.id,
+                probe_id=str(probe.id),
                 command=move.command,
             )
             raise HTTPException(
