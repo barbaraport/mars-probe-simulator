@@ -1,3 +1,6 @@
+from app.core.events import ProbeEvents
+from app.core.logging import Logger
+from app.core.observability import Observability
 from app.domain.probe.entities.probe import Probe as DomainProbe
 from app.domain.probe.entities.grid import Grid
 from app.domain.probe.exceptions import InvalidCommandError, InvalidMovementError
@@ -32,9 +35,8 @@ class MoveService:
 
         grid = probe.grid
 
-        command_runner = CommandRunner(grid=Grid(x_size=grid.x, y_size=grid.y))
-
         try:
+            command_runner = CommandRunner(grid=Grid(x_size=grid.x, y_size=grid.y))
             new_probe = command_runner.run(
                 probe=DomainProbe(x=probe.x, y=probe.y, direction=probe.direction),
                 commands=move.command,
@@ -49,6 +51,18 @@ class MoveService:
                 )
             )
 
+            Observability.emit(
+                ProbeEvents.PROBE_COMMAND_SENT,
+                probe_id=probe.id,
+                command=move.command,
+                from_x=probe.x,
+                from_y=probe.y,
+                from_direction=probe.direction,
+                to_x=persisted_probe.x,
+                to_y=persisted_probe.y,
+                to_direction=persisted_probe.direction,
+            )
+
             return MoveResponse(
                 id=persisted_probe.id,
                 x=persisted_probe.x,
@@ -56,6 +70,11 @@ class MoveService:
                 direction=persisted_probe.direction,
             )
         except InvalidCommandError as e:
+            Observability.emit(
+                ProbeEvents.PROBE_INVALID_COMMAND,
+                probe_id=probe.id,
+                command=move.command,
+            )
             raise HTTPException(
                 status_code=400,
                 detail={
@@ -64,6 +83,17 @@ class MoveService:
                 },
             )
         except InvalidMovementError as e:
+            Observability.emit(
+                ProbeEvents.PROBE_INVALID_COMMAND,
+                probe_id=probe.id,
+                command=move.command,
+                from_x=probe.x,
+                from_y=probe.y,
+                from_direction=probe.direction,
+                grid_x=grid.x,
+                grid_y=grid.y,
+            )
+
             raise HTTPException(
                 status_code=422,
                 detail={
@@ -72,6 +102,11 @@ class MoveService:
                 },
             )
         except Exception:
+            Logger.log(
+                "move_unexpected_error",
+                probe_id=probe.id,
+                command=move.command,
+            )
             raise HTTPException(
                 status_code=500,
                 detail={

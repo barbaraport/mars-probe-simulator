@@ -20,7 +20,7 @@ app = FastAPI(
 )
 
 Instrumentator().instrument(app).expose(app)
-FastAPIInstrumentor.instrument_app(app, excluded_urls="/metrics")
+FastAPIInstrumentor.instrument_app(app, excluded_urls="metrics")
 
 app.include_router(api_router, prefix="/api/v1")
 app.add_middleware(RequestLoggingMiddleware)
