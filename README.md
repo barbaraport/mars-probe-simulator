@@ -141,7 +141,7 @@ The application is instrumented with OpenTelemetry and automatically generates t
 - repository operations
 - SQLAlchemy database interactions
 
-[add image]
+[![Mars probe simulator Jaeger tracing for a probe movement](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)
 
 ### Local Observability Stack
 
@@ -160,12 +160,12 @@ Development environments include a complete local observability stack.
 [!NOTE]
 > The application is instrumented through OpenTelemetry and can export telemetry to any OTLP-compatible observability backend.
 
-- OpenTelemetry: Vendor-neutral telemetry standard used to generate traces and metrics.
-- Prometheus: Metrics collection and time-series database.
-- Grafana: Dashboarding and metrics visualization.
-- Jaeger: Distributed tracing backend used to inspect request execution flows.
+- **OpenTelemetry**: Vendor-neutral telemetry standard used to generate traces and metrics.
+- **Prometheus**: Metrics collection and time-series database.
+- **Grafana**: Dashboarding and metrics visualization.
+- **Jaeger**: Distributed tracing backend used to inspect request execution flows.
 
-[add image]
+[![Mars probe simulator Grafana dashboard](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)
 
 ### 🧰 Code Quality and Developer Experience
 
@@ -329,7 +329,7 @@ Pydantic schemas and explicit command validation ensure invalid input fails fast
 
 ### 🧾 Environment files
 
-The app loads configuration from `.env` in development. `.env.test` is used for the test environment.
+The app loads configuration from `.env` in development. `.env.test` is used for the test environment, while `.env.prod` is used for the production app.
 
 Example `.env`:
 
@@ -341,21 +341,16 @@ DB_PORT=5432
 DB_USER=myappuser
 DB_PASSWORD=password
 DB_NAME=mydb
-ENV=dev
+ENV=dev # dev, test, prod
+GRAFANA_ADMIN_USER=admin
+GRAFANA_ADMIN_USER_PASSWORD=admin
 ```
 
-Example `.env.test`:
-
-```env
-APP_PORT=8000
-ADMINER_PORT=8080
-DB_HOST=mars-probe-simulator-db
-DB_PORT=5433
-DB_USER=test
-DB_PASSWORD=test
-DB_NAME=test
-ENV=test
-```
+[!WARNING]
+> Each `.env` file is used for a specific purpose (development, testing, or production).
+> For a complete experience, you should create `.env`, `.env.test`, and `.env.prod`.
+> All must contain the same variables.
+> You should change the values for each environment, avoiding conflicts.
 
 ## 🚀 Getting Started
 
