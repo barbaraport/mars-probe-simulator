@@ -1,4 +1,5 @@
 # 🚀 mars-probe-simulator
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/barbaraport/mars-probe-simulator?utm_source=oss&utm_medium=github&utm_campaign=barbaraport%2Fmars-probe-simulator&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 A production-grade backend API built with **FastAPI**, designed to demonstrate how I structure scalable, maintainable, and testable systems in a real-world engineering environment.
 
@@ -35,15 +36,136 @@ This repository is intentionally organized to show:
 - **pytest** – deterministic, fast automated testing
 - **ruff** – linting, formatting, and static checks
 
-### 🐳 Docker & Deployment Ready
+### 🐳 Docker & Environment Strategy
 
-This repository includes Docker Compose configuration for both development and test workflows.
+This project uses environment-specific Docker configurations to reflect real-world deployment workflows.
 
-- `docker/docker-compose.yml` — core application, Postgres, and Adminer
-- `docker/dev/docker-compose.yml` — development-specific build and runtime configuration
-- `docker/prod/docker-compose.yml` — production-style compose manifest
+Each environment has different operational goals and therefore different build/runtime requirements:
 
-`make dev` launches the local stack, while `make test` executes the suite in a reproducible test environment.
+| Environment | Purpose |
+|------------|----------|
+| Development | Developer productivity, hot reload, debugging, and local tooling |
+| Test | Deterministic execution of automated test suites |
+| Production | Lean runtime image with only the dependencies required to run the application |
+
+This separation helps prevent development-only tooling from leaking into production images while keeping local workflows fast and reproducible.
+
+```text
+docker/
+├── prometheus.yml            # prometheus configuration
+├── docker-compose.yml        # shared/base services
+├── dev/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+├── test/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+└── prod/
+    ├── Dockerfile
+    └── docker-compose.yml
+```
+
+Key benefits:
+
+- isolated environment concerns
+- predictable builds
+- production-safe container images
+- reproducible development and testing workflows
+- reduced operational risk
+
+## 📊 Observability
+
+This application includes production-oriented observability capabilities based on modern telemetry standards.
+
+### Signals
+
+The service emits the three fundamental observability signals:
+
+- **Logs** (structured JSON logging)
+- **Metrics** (Prometheus)
+- **Traces** (OpenTelemetry)
+
+### Structured Logging
+
+All application logs are emitted as structured JSON and include request correlation metadata.
+
+Grid setup example:
+```json
+mars-probe-simulator-app-1  | {"status": "started", "grid_id": "75cf11e0-f5d5-4dd7-b895-22e7e3d66fa8", "grid_x": 10, "grid_y": 10, "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "probe_x": 0, "probe_y": 0, "probe_direction": "NORTH", "event": "PROBE_CREATED", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138437Z", "level": "info"}
+mars-probe-simulator-app-1  | {"operation": "increment", "new_value": 1.0, "event": "PROBE_CREATED_TOTAL", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138494Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"status": "finished", "grid_id": "75cf11e0-f5d5-4dd7-b895-22e7e3d66fa8", "grid_x": 10, "grid_y": 10, "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "probe_x": 0, "probe_y": 0, "probe_direction": "NORTH", "event": "PROBE_CREATED", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138512Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"method": "POST", "path": "/api/v1/setup", "status_code": 200, "duration_ms": 65.18, "event": "COMPLETED_REQUEST", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138988Z", "level": "info"}
+```
+
+Command example:
+```json
+mars-probe-simulator-app-1  | {"status": "started", "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "command": "MMMRMMM", "from_x": 0, "from_y": 0, "from_direction": "NORTH", "to_x": 3, "to_y": 3, "to_direction": "EAST", "event": "PROBE_COMMAND_SENT", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239671Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"operation": "increment", "new_value": 1.0, "event": "PROBE_COMMANDS_TOTAL", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239719Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"status": "finished", "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "command": "MMMRMMM", "from_x": 0, "from_y": 0, "from_direction": "NORTH", "to_x": 3, "to_y": 3, "to_direction": "EAST", "event": "PROBE_COMMAND_SENT", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239736Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"method": "PATCH", "path": "/api/v1/move", "status_code": 200, "duration_ms": 9.49, "event": "COMPLETED_REQUEST", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239865Z", "level": "info"}
+```
+
+### Health Endpoints
+
+Operational endpoints are available for runtime monitoring.
+
+| Endpoint | Purpose |
+|-----------|----------|
+| `/ready` | Readiness check, including database connectivity |
+| `/metrics` | Prometheus metrics endpoint |
+
+### Metrics
+
+Metrics are exposed using Prometheus-compatible format.
+
+Collected metrics include:
+
+- request count
+- request duration
+- in-flight requests
+- error rates
+- endpoint-specific statistics
+- domain usage statistics (grid/probe)
+
+### Distributed Tracing
+
+The application is instrumented with OpenTelemetry and automatically generates traces for:
+
+- FastAPI requests
+- service execution
+- repository operations
+- SQLAlchemy database interactions
+
+[![Mars probe simulator Jaeger tracing for a probe movement](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)
+
+### Local Observability Stack
+
+Development environments include a complete local observability stack.
+
+| Service | URL |
+|----------|------|
+| FastAPI Docs | http://localhost:8000/docs |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3000 |
+| Jaeger | http://localhost:16686 |
+| Adminer | http://localhost:8080 |
+
+### Tooling
+
+[!NOTE]
+> The application is instrumented through OpenTelemetry and can export telemetry to any OTLP-compatible observability backend.
+
+- **OpenTelemetry**: Vendor-neutral telemetry standard used to generate traces and metrics.
+- **Prometheus**: Metrics collection and time-series database.
+- **Grafana**: Dashboarding and metrics visualization.
+- **Jaeger**: Distributed tracing backend used to inspect request execution flows.
+
+[![Mars probe simulator Grafana dashboard](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)
 
 ### 🧰 Code Quality and Developer Experience
 
@@ -207,7 +329,7 @@ Pydantic schemas and explicit command validation ensure invalid input fails fast
 
 ### 🧾 Environment files
 
-The app loads configuration from `.env` in development. `.env.test` is used for the test environment.
+The app loads configuration from `.env` in development. `.env.test` is used for the test environment, while `.env.prod` is used for the production app.
 
 Example `.env`:
 
@@ -219,21 +341,16 @@ DB_PORT=5432
 DB_USER=myappuser
 DB_PASSWORD=password
 DB_NAME=mydb
-ENV=dev
+ENV=dev # dev, test, prod
+GRAFANA_ADMIN_USER=admin
+GRAFANA_ADMIN_USER_PASSWORD=admin
 ```
 
-Example `.env.test`:
-
-```env
-APP_PORT=8000
-ADMINER_PORT=8080
-DB_HOST=mars-probe-simulator-db
-DB_PORT=5433
-DB_USER=test
-DB_PASSWORD=test
-DB_NAME=test
-ENV=test
-```
+[!WARNING]
+> Each `.env` file is used for a specific purpose (development, testing, or production).
+> For a complete experience, you should create `.env`, `.env.test`, and `.env.prod`.
+> All must contain the same variables.
+> You should change the values for each environment, avoiding conflicts.
 
 ## 🚀 Getting Started
 

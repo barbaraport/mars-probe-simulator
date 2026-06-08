@@ -1,10 +1,13 @@
 from fastapi import APIRouter
-from .endpoints.setup_router import setup_router
-from .endpoints.move_router import move_router
-from .endpoints.check_router import check_router
+
+from app.api.v1.endpoints.ready_router import ready_router
+from app.api.v1.endpoints.setup_router import setup_router
+from app.api.v1.endpoints.move_router import move_router
+from app.api.v1.endpoints.check_router import check_router
 
 
 api_router = APIRouter()
+api_router.include_router(ready_router, prefix="/ready", tags=["API readiness check"])
 api_router.include_router(
     setup_router, prefix="/setup", tags=["Setup probe and its grid"]
 )

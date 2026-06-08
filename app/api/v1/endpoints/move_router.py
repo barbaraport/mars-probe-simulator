@@ -86,4 +86,4 @@ async def move_probe(move: MoveRequest, service: MoveServiceDependency):
     """
     Execute a move command on a probe.
     """
-    return await service.move(move)
+    return await service.process(move)
