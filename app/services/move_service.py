@@ -34,6 +34,9 @@ class MoveService:
             )
 
         grid = probe.grid
+        from_x = probe.x
+        from_y = probe.y
+        from_direction = probe.direction
 
         try:
             command_runner = CommandRunner(grid=Grid(x_size=grid.x, y_size=grid.y))
@@ -55,9 +58,9 @@ class MoveService:
                 ProbeEvents.PROBE_COMMAND_SENT,
                 probe_id=str(probe.id),
                 command=move.command,
-                from_x=probe.x,
-                from_y=probe.y,
-                from_direction=probe.direction,
+                from_x=from_x,
+                from_y=from_y,
+                from_direction=from_direction,
                 to_x=persisted_probe.x,
                 to_y=persisted_probe.y,
                 to_direction=persisted_probe.direction,

@@ -31,7 +31,7 @@ class SetupService:
                 grid_id=str(probe.grid.id),
                 grid_x=grid.x_size,
                 grid_y=grid.y_size,
-                probe_id=probe.id,
+                probe_id=str(probe.id),
                 probe_x=probe.x,
                 probe_y=probe.y,
                 probe_direction=probe.direction,
