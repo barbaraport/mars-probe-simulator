@@ -88,9 +88,26 @@ The service emits the three fundamental observability signals:
 
 All application logs are emitted as structured JSON and include request correlation metadata.
 
-Example:
+Grid setup example:
+```json
+mars-probe-simulator-app-1  | {"status": "started", "grid_id": "75cf11e0-f5d5-4dd7-b895-22e7e3d66fa8", "grid_x": 10, "grid_y": 10, "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "probe_x": 0, "probe_y": 0, "probe_direction": "NORTH", "event": "PROBE_CREATED", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138437Z", "level": "info"}
+mars-probe-simulator-app-1  | {"operation": "increment", "new_value": 1.0, "event": "PROBE_CREATED_TOTAL", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138494Z", "level": "info"}
 
+mars-probe-simulator-app-1  | {"status": "finished", "grid_id": "75cf11e0-f5d5-4dd7-b895-22e7e3d66fa8", "grid_x": 10, "grid_y": 10, "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "probe_x": 0, "probe_y": 0, "probe_direction": "NORTH", "event": "PROBE_CREATED", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138512Z", "level": "info"}
 
+mars-probe-simulator-app-1  | {"method": "POST", "path": "/api/v1/setup", "status_code": 200, "duration_ms": 65.18, "event": "COMPLETED_REQUEST", "correlation_id": "31bef03e-4f3d-4c59-a7bb-612049c6018a", "timestamp": "2026-06-08T01:08:47.138988Z", "level": "info"}
+```
+
+Command example:
+```json
+mars-probe-simulator-app-1  | {"status": "started", "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "command": "MMMRMMM", "from_x": 0, "from_y": 0, "from_direction": "NORTH", "to_x": 3, "to_y": 3, "to_direction": "EAST", "event": "PROBE_COMMAND_SENT", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239671Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"operation": "increment", "new_value": 1.0, "event": "PROBE_COMMANDS_TOTAL", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239719Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"status": "finished", "probe_id": "fc5e8297-4b08-4c44-b830-f1924589fa7c", "command": "MMMRMMM", "from_x": 0, "from_y": 0, "from_direction": "NORTH", "to_x": 3, "to_y": 3, "to_direction": "EAST", "event": "PROBE_COMMAND_SENT", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239736Z", "level": "info"}
+
+mars-probe-simulator-app-1  | {"method": "PATCH", "path": "/api/v1/move", "status_code": 200, "duration_ms": 9.49, "event": "COMPLETED_REQUEST", "correlation_id": "32dcb6f3-f5ee-4cc0-a841-cae6f6ae026e", "timestamp": "2026-06-08T01:09:42.239865Z", "level": "info"}
+```
 
 ### Health Endpoints
 
@@ -98,8 +115,7 @@ Operational endpoints are available for runtime monitoring.
 
 | Endpoint | Purpose |
 |-----------|----------|
-| `/health` | Liveness check |
-| `/ready` | Readiness check including database connectivity |
+| `/ready` | Readiness check, including database connectivity |
 | `/metrics` | Prometheus metrics endpoint |
 
 ### Metrics
@@ -113,6 +129,7 @@ Collected metrics include:
 - in-flight requests
 - error rates
 - endpoint-specific statistics
+- domain usage statistics (grid/probe)
 
 ### Distributed Tracing
 
@@ -122,6 +139,8 @@ The application is instrumented with OpenTelemetry and automatically generates t
 - service execution
 - repository operations
 - SQLAlchemy database interactions
+
+[add image]
 
 ### Local Observability Stack
 
@@ -137,35 +156,15 @@ Development environments include a complete local observability stack.
 
 ### Tooling
 
-#### OpenTelemetry
+[!NOTE]
+> The application is instrumented through OpenTelemetry and can export telemetry to any OTLP-compatible observability backend.
 
-Vendor-neutral telemetry standard used to generate traces and metrics.
+- OpenTelemetry: Vendor-neutral telemetry standard used to generate traces and metrics.
+- Prometheus: Metrics collection and time-series database.
+- Grafana: Dashboarding and metrics visualization.
+- Jaeger: Distributed tracing backend used to inspect request execution flows.
 
-https://opentelemetry.io/
-
-#### Prometheus
-
-Metrics collection and time-series database.
-
-https://prometheus.io/
-
-#### Grafana
-
-Dashboarding and metrics visualization.
-
-https://grafana.com/
-
-#### Jaeger
-
-Distributed tracing backend used to inspect request execution flows.
-
-https://www.jaegertracing.io/
-
-### Datadog Compatibility
-
-The application is instrumented through OpenTelemetry and can export telemetry to Datadog or any OTLP-compatible observability backend without changes to application code.
-
-This allows the observability backend to be swapped while keeping instrumentation vendor-neutral.
+[add image]
 
 ### 🧰 Code Quality and Developer Experience
 
