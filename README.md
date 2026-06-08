@@ -1,4 +1,5 @@
 # 🚀 mars-probe-simulator
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/barbaraport/mars-probe-simulator?utm_source=oss&utm_medium=github&utm_campaign=barbaraport%2Fmars-probe-simulator&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 A production-grade backend API built with **FastAPI**, designed to demonstrate how I structure scalable, maintainable, and testable systems in a real-world engineering environment.
 
