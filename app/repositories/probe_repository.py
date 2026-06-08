@@ -53,5 +53,5 @@ class ProbeRepository:
         return result.scalar_one_or_none()
 
     async def find_all(self) -> Sequence[Probe]:
-        users = await self.session.scalars(select(Probe))
-        return users.all()
+        probes = await self.session.scalars(select(Probe))
+        return probes.all()
