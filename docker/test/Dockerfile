@@ -8,4 +8,4 @@ ENV UV_PROJECT_ENVIRONMENT=/home/appuser/.venv
 COPY --chown=appuser:appuser pyproject.toml uv.lock ./
 RUN uv sync --frozen --dev
 COPY --chown=appuser:appuser . .
-CMD ["uv", "run", "fastapi", "dev", "app/main.py", "--host", "0.0.0.0"]
+CMD ["uv", "run", "pytest", "--cov=app"]
