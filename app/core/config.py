@@ -24,6 +24,8 @@ class Settings(BaseSettings):
     GRAFANA_ADMIN_USER: str
     GRAFANA_ADMIN_USER_PASSWORD: SecretStr
 
+    DD_API_KEY: SecretStr
+
     @computed_field(repr=False)
     def DATABASE_URL(self) -> str:
         return (
