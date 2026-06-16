@@ -53,12 +53,12 @@ class SetupService:
                     "code": "INVALID_PROBE_SETUP",
                     "message": f"The grid size ({setup.x}, {setup.y}) is invalid. {e}",
                 },
-            )
-        except Exception:
+            ) from e
+        except Exception as e:
             raise HTTPException(
                 status_code=500,
                 detail={
                     "code": "SETUP_UNEXPECTED_ERROR",
                     "message": "Unexpected error. Try again in a few seconds.",
                 },
-            )
+            ) from e
