@@ -38,7 +38,7 @@ async def test_when_moving_existent_probe_then_should_have_success():
     repo.save.return_value = Probe(id=probe_id, x=3, y=0, direction=Direction.EAST)
 
     service = MoveService(repo)
-    moved_probe = await service.move(MoveRequest(id=probe_id, command="MMM"))
+    moved_probe = await service.process(MoveRequest(id=probe_id, command="MMM"))
 
     repo.find_by_id.assert_called_once_with(probe_id)
     repo.save.assert_called_once()
@@ -59,7 +59,7 @@ async def test_when_moving_nonexistent_probe_then_should_raise_404_error():
     service = MoveService(repo)
 
     with pytest.raises(HTTPException) as exc_info:
-        await service.move(MoveRequest(id=probe_id, command="MMM"))
+        await service.process(MoveRequest(id=probe_id, command="MMM"))
 
     repo.find_by_id.assert_called_once_with(probe_id)
     repo.save.assert_not_called()
@@ -82,7 +82,7 @@ async def test_when_moving_with_invalid_command_then_should_raise_400_error():
     service = MoveService(repo)
 
     with pytest.raises(HTTPException) as exc_info:
-        await service.move(MoveRequest(id=probe_id, command="MXM"))
+        await service.process(MoveRequest(id=probe_id, command="MXM"))
 
     repo.find_by_id.assert_called_once_with(probe_id)
     repo.save.assert_not_called()
@@ -106,7 +106,7 @@ async def test_when_moving_beyond_grid_limits_then_should_raise_422_error():
     service = MoveService(repo)
 
     with pytest.raises(HTTPException) as exc_info:
-        await service.move(MoveRequest(id=probe_id, command="M"))
+        await service.process(MoveRequest(id=probe_id, command="M"))
 
     repo.find_by_id.assert_called_once_with(probe_id)
     repo.save.assert_not_called()
@@ -133,7 +133,7 @@ async def test_when_command_runner_raises_unexpected_exception_then_should_raise
         side_effect=Exception("unexpected failure"),
     ):
         with pytest.raises(HTTPException) as exc_info:
-            await service.move(MoveRequest(id=probe_id, command="MMM"))
+            await service.process(MoveRequest(id=probe_id, command="MMM"))
 
     repo.find_by_id.assert_called_once_with(probe_id)
     repo.save.assert_not_called()

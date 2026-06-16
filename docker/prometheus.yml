@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: mars-probe-simulator-api
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - mars-probe-simulator-app:8000

@@ -1,7 +1,9 @@
+.github
 .husky
 .pytest_cache
 .mypy_cache
 .ruff_cache
+.observability-data
 .venv
 venv
 docker

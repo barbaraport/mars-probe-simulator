@@ -1,8 +1,12 @@
+include:
+  - docker-compose.observability.yml
+
 services:
   mars-probe-simulator-app:
     build:
       context: ..
       dockerfile: docker/prod/Dockerfile
+    volumes: []
     restart: always
 
   mars-probe-simulator-db:

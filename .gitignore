@@ -4,6 +4,9 @@
 ### .env ###
 .env.*
 
+### Prometheus, Grafana, Jaeger ###
+.observability-data/
+
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm+all,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm+all,node
 
