@@ -7,4 +7,7 @@ USER appuser
 COPY --chown=appuser:appuser pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 COPY --chown=appuser:appuser . .
+USER root
+RUN chmod -R a-w /app
+USER appuser
 CMD ["uv", "run", "fastapi", "run", "app/main.py", "--host", "0.0.0.0"]
