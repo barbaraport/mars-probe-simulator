@@ -5,6 +5,9 @@ WORKDIR /app
 RUN pip install --no-cache-dir uv && chown -R appuser:appuser /app
 USER appuser
 COPY --chown=appuser:appuser pyproject.toml uv.lock ./
+USER root
+RUN chmod 444 pyproject.toml uv.lock
+USER appuser
 RUN uv sync --frozen --no-dev
 COPY --chown=appuser:appuser . .
 USER root
