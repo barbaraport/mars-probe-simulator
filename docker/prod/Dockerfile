@@ -9,7 +9,7 @@ USER root
 RUN chmod 444 pyproject.toml uv.lock
 USER appuser
 RUN uv sync --frozen --no-dev
-COPY --chown=appuser:appuser . .
+COPY --chown=appuser:appuser app/ app/
 USER root
 RUN chmod -R a-w /app
 USER appuser
