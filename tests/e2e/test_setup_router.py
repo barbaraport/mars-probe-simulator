@@ -200,6 +200,8 @@ async def test_when_creating_setup_with_zeroed_grid_size_then_response_should_be
 
     data = response.json()
 
-    assert data["detail"][0]["loc"] == ["body"]
-    assert data["detail"][0]["type"] == "value_error"
-    assert data["detail"][0]["msg"] == "Value error, X and Y cannot both be zero"
+    assert data["detail"]["code"] == "INVALID_PROBE_SETUP"
+    assert (
+        data["detail"]["message"]
+        == "The grid size (0, 0) is invalid. At least one value (0, 0) must be greater than zero."
+    )

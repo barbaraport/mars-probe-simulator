@@ -7,5 +7,6 @@ USER appuser
 ENV UV_PROJECT_ENVIRONMENT=/home/appuser/.venv
 COPY --chown=appuser:appuser pyproject.toml uv.lock ./
 RUN uv sync --frozen --dev
-COPY --chown=appuser:appuser . .
+COPY --chown=appuser:appuser app/ app/
+COPY --chown=appuser:appuser tests/ tests/
 CMD ["uv", "run", "pytest", "--cov=app"]

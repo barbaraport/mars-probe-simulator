@@ -116,7 +116,7 @@ Operational endpoints are available for runtime monitoring.
 
 | Endpoint | Purpose |
 |-----------|----------|
-| `/ready` | Readiness check, including database connectivity |
+| `/api/v1/ready` | Readiness check, including database connectivity |
 | `/metrics` | Prometheus metrics endpoint |
 
 ### Metrics
