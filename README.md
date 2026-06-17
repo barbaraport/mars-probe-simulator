@@ -44,7 +44,7 @@ This project uses environment-specific Docker configurations to reflect real-wor
 Each environment has different operational goals and therefore different build/runtime requirements:
 
 | Environment | Purpose |
-|------------|----------|
+|-------------|---------|
 | Development | Developer productivity, hot reload, debugging, and local tooling |
 | Test | Deterministic execution of automated test suites |
 | Production | Lean runtime image with only the dependencies required to run the application |
@@ -116,7 +116,7 @@ mars-probe-simulator-app-1  | {"method": "PATCH", "path": "/api/v1/move", "statu
 Operational endpoints are available for runtime monitoring.
 
 | Endpoint | Purpose |
-|-----------|----------|
+|------------|---------|
 | `/api/v1/ready` | Readiness check, including database connectivity |
 | `/metrics` | Prometheus metrics endpoint |
 
@@ -143,6 +143,8 @@ The application is instrumented with OpenTelemetry and OpenTelemetry Collector. 
 - SQLAlchemy database interactions
 
 [![Mars probe simulator Jaeger tracing for a probe movement](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)
+
+[![Mars probe simulator Datadog tracing for a probe movement](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/datadog-apm.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/datadog-apm.png)
 
 ### Vendor-Neutral Observability
 
@@ -176,7 +178,7 @@ Jaeger Datadog
 Development environments include a complete local observability stack.
 
 | Service | URL |
-|----------|------|
+|---------|-----|
 | FastAPI Docs | http://localhost:8000/docs |
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 |
@@ -185,7 +187,7 @@ Development environments include a complete local observability stack.
 
 ### Tooling
 
-[!NOTE]
+> [!NOTE]
 > The application is instrumented through OpenTelemetry and can export telemetry to any OTLP-compatible observability backend.
 
 - **OpenTelemetry SDK**: Generates vendor-neutral telemetry signals.
@@ -195,6 +197,8 @@ Development environments include a complete local observability stack.
 - **Jaeger**: Distributed tracing backend used locally to inspect request execution flows.
 
 [![Mars probe simulator Grafana dashboard](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)
+
+[![Mars probe simulator Datadog dashboard](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/datadog-dashboard.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/datadog-dashboard.png)
 
 ### 🧰 Code Quality and Developer Experience
 
@@ -375,7 +379,7 @@ GRAFANA_ADMIN_USER=admin
 GRAFANA_ADMIN_USER_PASSWORD=admin
 ```
 
-[!WARNING]
+> [!WARNING]
 > Each `.env` file is used for a specific purpose (development, testing, or production).
 > For a complete experience, you should create `.env`, `.env.test`, and `.env.prod`.
 > All must contain the same variables.
