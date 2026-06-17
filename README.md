@@ -20,6 +20,7 @@ This repository is intentionally organized to show:
 - ⚡ **Async-first architecture** using FastAPI and SQLAlchemy 2.0 async
 - 🧱 **Layered domain model** with clear API / service / domain / repository boundaries
 - 🧪 **Full testing pyramid**: unit, integration, and E2E coverage
+- 🔭 **Vendor-neutral observability** powered by OpenTelemetry and OpenTelemetry Collector
 - 🐘 **PostgreSQL-ready** data layer with Alembic migrations and database contract safety
 - 🛠 **Quality tooling**: `ruff`, automated hooks, and environment-specific workflows
 - 🧩 **Extendable design** for future features and production adoption
@@ -134,7 +135,7 @@ Collected metrics include:
 
 ### Distributed Tracing
 
-The application is instrumented with OpenTelemetry and automatically generates traces for:
+The application is instrumented with OpenTelemetry and OpenTelemetry Collector. It automatically exports traces for:
 
 - FastAPI requests
 - service execution
@@ -142,6 +143,33 @@ The application is instrumented with OpenTelemetry and automatically generates t
 - SQLAlchemy database interactions
 
 [![Mars probe simulator Jaeger tracing for a probe movement](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/jaeger.png)
+
+### Vendor-Neutral Observability
+
+Telemetry is generated using OpenTelemetry and exported through an OpenTelemetry Collector.
+
+This architecture decouples application instrumentation from observability vendors, allowing telemetry backends to be replaced without modifying application code.
+
+<div align="center">
+<pre>
+┌─────────────────────┐
+│ FastAPI Application │
+└──────────┬──────────┘
+│
+▼
+┌─────────────────────┐
+│ OpenTelemetry SDK   │
+└──────────┬──────────┘
+     │ OTLP
+▼
+┌─────────────────────┐
+│ OTEL Collector      │
+└───────┬─────┬───────┘
+│     │
+▼     ▼
+Jaeger Datadog
+</pre>
+</div>
 
 ### Local Observability Stack
 
@@ -160,10 +188,11 @@ Development environments include a complete local observability stack.
 [!NOTE]
 > The application is instrumented through OpenTelemetry and can export telemetry to any OTLP-compatible observability backend.
 
-- **OpenTelemetry**: Vendor-neutral telemetry standard used to generate traces and metrics.
+- **OpenTelemetry SDK**: Generates vendor-neutral telemetry signals.
+- **OpenTelemetry Collector**: Central telemetry pipeline responsible for routing traces to one or more observability backends.
 - **Prometheus**: Metrics collection and time-series database.
 - **Grafana**: Dashboarding and metrics visualization.
-- **Jaeger**: Distributed tracing backend used to inspect request execution flows.
+- **Jaeger**: Distributed tracing backend used locally to inspect request execution flows.
 
 [![Mars probe simulator Grafana dashboard](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)](https://raw.githubusercontent.com/barbaraport/mars-probe-simulator/refs/heads/main/files/grafana.mov)
 
