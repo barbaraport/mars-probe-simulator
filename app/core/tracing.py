@@ -10,12 +10,12 @@ def tracing_config():
     resource = Resource.create(
         {
             "service.name": "mars-probe-simulator",
-            "service.version": "1.0.0",
-            "deployment.environemnt": settings.ENV,
+            "service.version": settings.VERSION,
+            "deployment.environment": settings.ENV,
         }
     )
     processor = BatchSpanProcessor(
-        OTLPSpanExporter(endpoint="http://otel-collector:4318/v1/traces")
+        OTLPSpanExporter(endpoint="http://otel-collector:4319/v1/traces")
     )
     provider = TracerProvider(resource=resource)
     provider.add_span_processor(processor)

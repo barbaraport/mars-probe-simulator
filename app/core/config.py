@@ -20,17 +20,12 @@ class Settings(BaseSettings):
     APP_PORT: int
     ADMINER_PORT: int
     ENV: Literal["dev", "test", "prod"]
+    VERSION: str
 
     GRAFANA_ADMIN_USER: str = "admin"
     GRAFANA_ADMIN_USER_PASSWORD: SecretStr = SecretStr("admin")
 
     DD_API_KEY: SecretStr
-    DD_SERVICE: str
-    DD_VERSION: str
-    DD_AGENT_HOST: str
-    DD_TRACE_AGENT_PORT: int
-    DD_TRACE_ENABLED: bool
-    DD_ENV: str
 
     @computed_field(repr=False)
     def DATABASE_URL(self) -> str:
