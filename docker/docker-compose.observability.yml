@@ -23,13 +23,22 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ../.observability-data/${ENV}/grafana:/var/lib/grafana
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.115.1
+    restart: "always"
+    depends_on:
+      - jaeger
+      - dd-agent
+    command:
+      - "--config=/etc/otelcol/config.yaml"
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otelcol/config.yaml:ro
+
   jaeger:
     image: jaegertracing/jaeger
     restart: "always"
     ports:
       - "16686:16686"
-      - "4317:4317"
-      - "4318:4318"
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
       SPAN_STORAGE_TYPE: badger
@@ -39,3 +48,21 @@ services:
     volumes:
       - ../.observability-data/${ENV}/jaeger/data:/badger/data
       - ../.observability-data/${ENV}/jaeger/key:/badger/key
+
+  dd-agent:
+    image: registry.datadoghq.com/agent:7
+    container_name: dd-agent
+    restart: "always"
+    environment:
+      DD_API_KEY: ${DD_API_KEY}
+      DD_APM_ENABLED: "true"
+      DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_GRPC_ENDPOINT: "0.0.0.0:4317"
+      DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_HTTP_ENDPOINT: "0.0.0.0:4318"
+      DD_HOSTNAME: ${ENV}-mars-probe-simulator
+      DD_SITE: "datadoghq.com"
+      DD_LOGS_ENABLED: "true"
+      DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
