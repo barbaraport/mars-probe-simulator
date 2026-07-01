@@ -22,6 +22,7 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           DB_NAME=${{ vars.DB_NAME }}
           ENV=${{ vars.ENV }}
+          VERSION=${{ vars.VERSION }}
           EOF
       - name: Create .env.test
         run: |
@@ -34,6 +35,7 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           DB_NAME=${{ vars.DB_NAME }}
           ENV=${{ vars.ENV }}
+          VERSION=${{ vars.VERSION }}
           EOF
       - name: Run CI checks
         run: make ci
