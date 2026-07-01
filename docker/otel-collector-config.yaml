@@ -4,7 +4,7 @@ receivers:
       grpc:
         endpoint: 0.0.0.0:4317
       http:
-        endpoint: 0.0.0.0:4318
+        endpoint: 0.0.0.0:4319
 
 processors:
   batch:
@@ -15,10 +15,10 @@ exporters:
     tls:
       insecure: true
 
-  datadog:
-    api:
-      key: ${env:DD_API_KEY}
-      site: datadoghq.com
+  otlphttp/dd-agent:
+    endpoint: http://dd-agent:4318
+    tls:
+      insecure: true
 
 service:
   pipelines:
@@ -29,4 +29,4 @@ service:
         - batch
       exporters:
         - otlp/jaeger
-        - datadog
+        - otlphttp/dd-agent

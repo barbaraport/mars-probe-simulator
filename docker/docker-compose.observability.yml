@@ -24,7 +24,7 @@ services:
       - ../.observability-data/${ENV}/grafana:/var/lib/grafana
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
+    image: otel/opentelemetry-collector-contrib:0.115.1
     restart: "always"
     command:
       - "--config=/etc/otelcol/config.yaml"
@@ -40,8 +40,6 @@ services:
       - otel-collector
     ports:
       - "16686:16686"
-      - "4317:4317"
-      - "4318:4318"
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
       SPAN_STORAGE_TYPE: badger
@@ -60,15 +58,14 @@ services:
       - otel-collector
     environment:
       DD_API_KEY: ${DD_API_KEY}
+      DD_APM_ENABLED: "true"
+      DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_GRPC_ENDPOINT: "0.0.0.0:4317"
+      DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_HTTP_ENDPOINT: "0.0.0.0:4318"
       DD_HOSTNAME: ${ENV}-mars-probe-simulator
       DD_SITE: "datadoghq.com"
       DD_LOGS_ENABLED: "true"
       DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: "true"
-      DD_APM_ENABLED: "true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
-    ports:
-      - "8126:8126"
-      - "8125:8125/udp"
