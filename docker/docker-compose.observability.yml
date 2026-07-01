@@ -26,18 +26,17 @@ services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.115.1
     restart: "always"
+    depends_on:
+      - jaeger
+      - dd-agent
     command:
       - "--config=/etc/otelcol/config.yaml"
     volumes:
       - ./otel-collector-config.yaml:/etc/otelcol/config.yaml:ro
-    environment:
-      - DD_API_KEY=${DD_API_KEY}
 
   jaeger:
     image: jaegertracing/jaeger
     restart: "always"
-    depends_on:
-      - otel-collector
     ports:
       - "16686:16686"
     environment:
@@ -54,8 +53,6 @@ services:
     image: registry.datadoghq.com/agent:7
     container_name: dd-agent
     restart: "always"
-    depends_on:
-      - otel-collector
     environment:
       DD_API_KEY: ${DD_API_KEY}
       DD_APM_ENABLED: "true"
